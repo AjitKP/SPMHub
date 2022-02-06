@@ -1,0 +1,7 @@
+
+
+GET http://localhost:4004/hxm/spmhub/service/VerifyCredentials()
+tenant:0438
+user:CompAdmin
+pass:SapAdmin@123
+

@@ -1,0 +1,49 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:f="sap.f" xmlns="sap.m" controllerName="hxm.spm.ui.controller.Main" xmlns:card="sap.f.cards" xmlns:core="sap.ui.core" xmlns:tnt="sap.tnt" displayBlock="true">
+
+    <Shell id="shell">
+        <App id="app">
+            <pages>
+                <Page id="page" title="{i18n>title}" titleAlignment="Center" backgroundDesign="Solid" showFooter="true">
+                    <content>
+                        <FlexBox height="100%" alignItems="Center" justifyContent="Center">
+                            <f:Card class="sapUiMediumMargin" width="90%" autoFocus="false">
+                                <f:header>
+                                    <card:Header iconBackgroundColor="Accent8" title="Commissions System Information" subtitle="Provide tenant id and admin credentials" iconSrc="sap-icon://it-system" />
+                                </f:header>
+                                <f:content>
+                                    <VBox class="sapUiNoMarginBegin sapUiNoMarginEnd">
+                                        <VBox class="sapUiSmallMarginTopBottom sapUiLargeMarginBeginEnd" width="100%">
+                                            <Label text="Tenant Id" labelFor="idTenantInput" />
+                                            <Input id="idTenantInput" placeholder="e.g. 0436" width="100%" required="true"></Input>
+                                        </VBox>
+                                        <VBox class="sapUiSmallMarginTopBottom sapUiLargeMarginBeginEnd" width="100%">
+                                            <Label text="User Id" labelFor="idUserInput" />
+                                            <Input id="idUserInput" placeholder="e.g. admin" width="100%" required="true"></Input>
+                                        </VBox>
+                                        <VBox class="sapUiSmallMarginTopBottom sapUiLargeMarginBeginEnd" width="100%">
+                                            <Label text="Password" labelFor="idPasswordInput" />
+                                            <Input id="idPasswordInput" placeholder="" width="100%" type="Password" required="true"></Input>
+                                        </VBox>
+                                        <VBox class="sapUiTinyMarginTop sapUiMediumMarginBottom sapUiLargeMarginBeginEnd" width="100%">
+                                            <!-- <HBox justifyContent="Center" class="Btn" width="100%"> -->
+                                                <Button text="Continue" type="Accept" width="100%" icon="sap-icon://begin" press="onContinueLogin"/>
+                                            <!-- </HBox> -->
+                                        </VBox>
+
+                                    </VBox>
+                                </f:content>
+                            </f:Card>
+                        </FlexBox>
+                    </content>
+                    <footer>
+                        <OverflowToolbar>
+                            <ToolbarSpacer />
+                            <Button text="" type="Accept" visible="false" />
+                        </OverflowToolbar>
+                    </footer>
+                </Page>
+
+            </pages>
+        </App>
+    </Shell>
+</mvc:View>

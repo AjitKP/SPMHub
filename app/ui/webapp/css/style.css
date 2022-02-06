@@ -1,0 +1,23 @@
+/* Enter your custom styles here */
+
+.sapUiSizeCompact .sapMBtn {
+    height: 2rem;
+}
+
+.sapUiSizeCompact .sapMBtnInner {
+    height: 2rem;
+    min-width: 2rem;
+}
+
+.sapUiSizeCompact .sapMBtnContent {
+    line-height: 2rem;
+}
+
+.sapUiSizeCompact .sapMBtnIcon {
+    line-height: 2rem;
+}
+
+.borderTop{
+border-top: 0.0625rem solid #ccc;
+}
+
