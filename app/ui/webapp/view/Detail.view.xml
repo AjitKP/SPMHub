@@ -2,46 +2,9 @@
     <Shell id="shell">
         <App id="app">
             <pages>
-				<tnt:ToolPage id="idToolPage" sideExpanded="true" busy="false" busyIndicatorDelay="1000" visible="true" class="sapUiSizeCozy">
-					<tnt:header >
-						<tnt:ToolHeader	class="PageHeaderColor">
-							<tnt:content>
-								<Button id="sideNavigationToggleButton" icon="sap-icon://menu2" type="Transparent" press=".onSideNavButtonPress"></Button>
-								<Image src="../webapp/images/sap_logo.svg" width="48px"></Image>
-								<Text text="{i18n>title}" class="PageHeaderText"></Text>
-							</tnt:content>
-						</tnt:ToolHeader>
-					</tnt:header>
-					<tnt:mainContents>
-						<!--sap.ui.core.Control-->
-						<App id="AppContent"></App>
-					</tnt:mainContents>
-					<tnt:sideContent>
-						<!--sap.tnt.SideNavigation-->
-						<tnt:SideNavigation id="idSideNavigation">
-							<tnt:fixedItem>
-								<!--sap.tnt.NavigationList-->
-							</tnt:fixedItem>
-							<tnt:footer>
-								<!--sap.tnt.NavigationList-->
-							</tnt:footer>
-							<tnt:item>
-								<!--sap.tnt.NavigationList-->
-								<tnt:NavigationList id="idNavList">
-									<tnt:items>
-										<!--sap.tnt.NavigationListItem-->
-										<tnt:NavigationListItem	icon="sap-icon://it-system"	key="systems"	text="Systems"></tnt:NavigationListItem>
-										<tnt:NavigationListItem	icon="sap-icon://customize"	key="systemtypes"	text="System Types"></tnt:NavigationListItem>
-										<tnt:NavigationListItem	icon="sap-icon://manager"	key="contacttypes"	text="Contact Types"></tnt:NavigationListItem>
-										<tnt:NavigationListItem	icon="sap-icon://product"	key="products"	text="{i18n>listProduct}"></tnt:NavigationListItem>
-										<tnt:NavigationListItem	icon="sap-icon://contacts"	key="contacts"	text="Contacts"></tnt:NavigationListItem>
-									</tnt:items>
-								</tnt:NavigationList>
-							</tnt:item>
-
-						</tnt:SideNavigation>
-					</tnt:sideContent>
-				</tnt:ToolPage>            
+      
+                <Page>
+                </Page>     
             </pages>
         </App>
     </Shell>
