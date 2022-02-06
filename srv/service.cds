@@ -4,10 +4,10 @@ using { hxm } from '../db/schema';
 service SPMHubService {
 
     @Capabilities.FilterRestrictions:{
-        Filterable:false,
-        
+        Filterable:false        
     }
     entity BusinessUnits as projection on hxm.BusinessUnits;
+    entity SpmHubRequest as projection on hxm.SpmHubRequest;
 
     function VerifyCredentials() returns String(20);
 
