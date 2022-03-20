@@ -21,3 +21,18 @@
 border-top: 0.0625rem solid #ccc;
 }
 
+.zSegmentedButton {
+    min-width: 450px !important;
+}
+
+.zsapUiTinyPadding {
+    padding: 0.5rem !important;
+}
+.zsapUiTinyPadding sapMPanelContent {
+    padding-bottom: 0.625rem !important;
+}
+
+.sapMPanelContent {
+    padding-bottom: 0.625rem !important;
+}
+

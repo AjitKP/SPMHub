@@ -6,7 +6,7 @@ class srvCommissions {
     constructor(sUrl, sUserName, sPassword){
         this.HostUrl    = 'https://'+sUrl+'.callidusondemand.com/api/v2';
         this.UserName   = sUserName;
-        this.Password   = sPassword;
+        this.Password   = sPassword;        
     }
 
     _getApiHeaders(){
@@ -76,5 +76,29 @@ class srvCommissions {
         }
     }
 
+    async getTxByQuery(sQuery){
+        let aTxData=[], sNextQuery;
+        sNextQuery = sQuery; 
+        try {
+            do {
+                const oResponse = await axios({ method:constants.HTTP_METHOD_GET, baseURL: this.HostUrl, url:sNextQuery, headers:this._getApiHeaders()})            
+                aTxData = [...aTxData, ...oResponse.data.salesTransactions];
+                oResponse.data.hasOwnProperty('next') ? sNextQuery=oResponse.data.next : sNextQuery='';                                    
+            } while (sNextQuery);            
+        } catch (error) {
+            console.log(error);
+        }
+        return aTxData;                   
+    }
+
+    async createTransaction(input){
+        try {
+            const oResponse = await axios({ method:constants.HTTP_METHOD_POST, baseURL: this.HostUrl, url:'/salesTransactions', headers:this._getApiHeaders(), data:[input]})
+            return oResponse.data.salesTransactions[0];            
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }    
 }
 module.exports = srvCommissions;

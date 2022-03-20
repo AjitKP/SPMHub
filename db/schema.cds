@@ -2,8 +2,8 @@ namespace hxm;
 using {managed} from '@sap/cds/common';
 
 entity BusinessUnits {
-    tenantid                :Integer;
-    virtual businessUnitSeq :Integer;
+    //tenantid                :Integer;
+    key businessUnitSeq :Integer;
     virtual processingUnit  :Integer;
     virtual name            :String;
     virtual description     :String;

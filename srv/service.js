@@ -24,4 +24,12 @@ module.exports = cds.service.impl(async function () {
         return await commSrv.verifyCommCredentials();
     })
 
+    this.on('TransactionRepeater', async(req)=>{
+        console.log(req.data);
+        console.log(req.headers);
+        console.log(req.query);
+        console.log(req.params);
+        return null;
+    })
+
 })

@@ -1,7 +1,27 @@
 
 
-GET http://localhost:4004/hxm/spmhub/service/VerifyCredentials()
+# GET http://localhost:4004/hxm/spmhub/service/VerifyCredentials()
+# tenant:0438
+# user:CompAdmin
+# pass:SapAdmin@123
+
+
+# GET http://localhost:4004/v2/hxm/spmhub/service/BusinessUnits
+# tenant:0438
+# user:CompAdmin
+# pass:SapAdmin@123
+
+POST http://localhost:4004/v2/hxm/spmhub/service/TransactionRepeater("D2D", "1212121212112", "USD', '2021-01-01', '2022-01-01')
 tenant:0438
 user:CompAdmin
 pass:SapAdmin@123
+Content-Type: application/json
+
+{
+    "OpType":"D2D",
+    "ProcessingUnitSeq":"123456789120",
+    "Currency":"USD",
+    "FromTime":"2021-01-01",
+    "ToTime":"2022-01-01"
+}
 

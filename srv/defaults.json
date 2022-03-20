@@ -1,0 +1,13 @@
+{
+    "periodtype":[
+        {"periodtypeseq":"2814749767106564","name":"root","periodtypelevel":"0"},
+        {"periodtypeseq":"2814749767106571","name":"decade","periodtypelevel":"1"},
+        {"periodtypeseq":"2814749767106569","name":"year","periodtypelevel":"2"},
+        {"periodtypeseq":"2814749767106567","name":"semiannual","periodtypelevel":"3"},
+        {"periodtypeseq":"2814749767106563","name":"quarter","periodtypelevel":"4"},
+        {"periodtypeseq":"2814749767106561","name":"month","periodtypelevel":"5"},
+        {"periodtypeseq":"2814749767106566","name":"semi-month","periodtypelevel":"6"},
+        {"periodtypeseq":"2814749767106568","name":"week","periodtypelevel":"7"},
+        {"periodtypeseq":"2814749767106570","name":"day","periodtypelevel":"8"}
+    ]
+}

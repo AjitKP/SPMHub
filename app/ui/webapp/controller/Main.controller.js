@@ -10,7 +10,10 @@ sap.ui.define([
         "use strict";
 
         return Controller.extend("hxm.spm.ui.controller.Main", {
-            onInit: function () { },
+            onInit: function () {
+                const oModel = this.getView().getModel();
+            },
+
 
             onContinueLogin: function(){
                 // eslint-disable-next-line no-unused-vars

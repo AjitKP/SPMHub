@@ -10,5 +10,6 @@ service SPMHubService {
     entity SpmHubRequest as projection on hxm.SpmHubRequest;
 
     function VerifyCredentials() returns String(20);
+    action TransactionRepeater (OpType:String, ProcessingUnitSeq:String, Currency:String, FromTime:String, ToTime:String) returns String(200);
 
 }
