@@ -3,10 +3,13 @@ const path  = require('path');
 const {v4: uuid4} = require('uuid')
 //const df    = require('dateformat');
 const moment = require('moment');
+const constants = require('./constants');
 
-const sLogHeaderFilePath = path.join(path.dirname(require.main.filename), 'data', 'logHeader.json');
-const sLogDetailFilePath = path.join(path.dirname(require.main.filename), 'data', 'logDetail.json');
+//console.log(__dirname);
 
+const sLogHeaderFilePath = path.join(__dirname, 'data', 'logHeader.json');
+const sLogDetailFilePath = path.join(__dirname, 'data', 'logDetail.json');
+//console.log(sLogHeaderFilePath+sLogDetailFilePath);
 
 class srvLogger {
 
@@ -45,11 +48,28 @@ class srvLogger {
         oLogItem.DateTime       = moment(new Date()).format("yyyy-MM-DDTHH:mm:ss")
         oLogItem.LogItemType    = sLogType;
         oLogItem.LogItemMessage = sLogMsg;
-        oLogItem.LogItemData    = sLogData;
+        sLogData == undefined? oLogItem.LogItemData = '' : oLogItem.LogItemData = sLogData;
         oLogHeadItem.LogItems.push(oLogItem);
-        aLogHeadItems.push(oLogHead);
+        aLogHeadItems.push(oLogHeadItem);
         fs.writeFileSync(sLogDetailFilePath, JSON.stringify(aLogHeadItems)); 
         return oLogItem;        
+    }
+
+    getLogCountByUUID(sLogUUID){
+        let aLogHeadItems = JSON.parse(fs.readFileSync(sLogDetailFilePath)), iSuccessCount=0, iErrorCount=0;
+        for(let i=0; i<aLogHeadItems.length; i++){
+            if(aLogHeadItems[i].LogUUID == sLogUUID){
+                for(let j=0; j<aLogHeadItems[i].LogItems; j++){
+                    if(aLogHeadItems[i].LogItems[j].LogItemType == constants.LOG_TYPE_SUCCESS){
+                        iSuccessCount = iSuccessCount + 1;
+                    }
+                    if(aLogHeadItems[i].LogItems[j].LogItemType == constants.LOG_TYPE_ERROR){
+                        iErrorCount = iErrorCount + 1;
+                    }                    
+                }
+            }
+        }
+        return {SuccessCount:iSuccessCount, ErrorCount:iErrorCount};
     }
 
 }

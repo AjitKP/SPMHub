@@ -6,5 +6,10 @@ module.exports = Object.freeze({
     MONTH_TO_MONTH      : 'M2M',
     YEAR_TO_YEAR        : 'Y2Y',
     TIME_DAYS           : 'days',
-    TIME_MONTHS         : 'months'
+    TIME_MONTHS         : 'months',
+    LOG_TYPE_SUCCESS    : 'Success',
+    LOG_TYPE_ERROR      : 'Error',
+    LOG_TYPE_WARNING    : 'Warning',
+    LOG_TYPE_INFO       : 'Information',
+    LOG_TYPE_DEBUG      : 'Debug'
 })

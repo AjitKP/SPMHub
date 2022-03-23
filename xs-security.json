@@ -1,0 +1,21 @@
+{
+    "xsappname": "spmhub-${org}-${space}",
+    "tenant-mode": "dedicated",
+    "scopes": [
+        {
+            "name": "$XSAPPNAME.SPMHubUser",
+            "description": "SPMHubUser"
+        }
+    ],
+    "attributes": [],
+    "role-templates": [
+        {
+            "name": "SPMHubUser",
+            "description": "generated",
+            "scope-references": [
+                "$XSAPPNAME.SPMHubUser"
+            ],
+            "attribute-references": []
+        }
+    ]
+}

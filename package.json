@@ -8,10 +8,15 @@
   "dependencies": {
     "@sap/cds": "^5",
     "@sap/cds-odata-v2-adapter-proxy": "^1.8.5",
+    "@sap/xsenv": "^3.2.1",
+    "@sap/xssec": "^3.2.13",
     "axios": "^0.24.0",
+    "dotenv": "^16.0.0",
     "express": "^4",
     "hdb": "^0.18.3",
     "moment": "^2.29.1",
+    "nodemailer": "^6.7.3",
+    "passport": "^0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -57,6 +62,9 @@
       },
       "db": {
         "kind": "sql"
+      },
+      "uaa": {
+        "kind": "xsuaa"
       }
     },
     "hana": {

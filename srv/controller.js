@@ -1,12 +1,13 @@
-const commapi = require('./commissions');
-const moment  = require('moment');
+const commapi   = require('./commissions');
+const moment    = require('moment');
 const constants = require('./constants');
-const logger = require('./logger');
+const logger    = require('./logger');
+const mailer    = require('./mailer');
 
 class commController {
 
     aDateTypeFields = ['compensationDate','accountingDate','modificationDate','genericDate1','genericDate2','genericDate3','genericDate4','genericDate5','genericDate6'];
-    aDeleteFields   = ['salesTransactionSeq','pipelineRun','originTypeId','modelSeq'];
+    aDeleteFields   = ['salesTransactionSeq','pipelineRun','originTypeId','modelSeq','reason', 'billToAddress'];
     aTxAssignFields = ['payeeId','setNumber', 'genericNumber1'];
     sDateToDate     = constants.DATE_TO_DATE; 
     sMonthToMonth   = constants.MONTH_TO_MONTH; 
@@ -36,7 +37,7 @@ class commController {
 
     prepareTxQuery(sDate, sProcessingUnitSeq){
         let sQuery = '';
-        sQuery = sQuery + '/v2/salesTransactions?inlineCount=true&orderBy=compensationDate&top=100&expand=transactionAssignments&$filter='; 
+        sQuery = sQuery + '/salesTransactions?inlineCount=true&orderBy=compensationDate&top=100&expand=transactionAssignments&$filter='; 
         sQuery = sQuery + 'processingUnit eq ' + sProcessingUnitSeq;
         sQuery = sQuery + ' and ' + 'compensationDate eq '+ sDate;        
         return sQuery;
@@ -49,10 +50,10 @@ class commController {
                 this.aDateTypeFields.forEach(sFieldKey => {
                     if(oTxDataOut.hasOwnProperty(sFieldKey) && oTxDataOut[sFieldKey] != null){
                         let sDate = oTxDataOut[sFieldKey].substr(0,10);
-                        let mDate = moment(sDate, sDateFormat);
-                        let mFrom = moment(sFrom, sDateFormat);
-                        let mTo   = moment(sTo, sDateFormat);
-                        sDate != sFrom ? oTxDataOut[sFieldKey] = mTo.subtract(mDate.diff(mFrom, this.sDays), this.sDays).format(sDateFormat) : oTxDataOut[sFieldKey] = sTo;            
+                        let mDate = moment(sDate, this.sDateFormat);
+                        let mFrom = moment(sFrom, this.sDateFormat);
+                        let mTo   = moment(sTo, this.sDateFormat);
+                        sDate != sFrom ? oTxDataOut[sFieldKey] = mTo.subtract(mDate.diff(mFrom, this.sDays), this.sDays).format(this.sDateFormat) : oTxDataOut[sFieldKey] = sTo;            
                     } 
                 });                    
                 break;
@@ -81,9 +82,31 @@ class commController {
         return oTxDataOut;
     }    
 
+    getDatesList(sOpType, sFromTime, sToTime){
+        let sStartDate, sEndDate, dMoment, aDateList=[], sDate, oDateList={};
+        if(sOpType == this.sYearToYear){
+            sStartDate  = moment(sFromTime, 'YYYY').clone().startOf('year').format(this.sDateFormat);
+            sEndDate    = moment(sFromTime, 'YYYY').clone().endOf('year').format(this.sDateFormat);
+        }else if (sOpType == this.sMonthToMonth) {
+            sStartDate  = moment(sFromTime, 'YYYY-MM').clone().startOf('month').format(this.sDateFormat);
+            sEndDate    = moment(sFromTime, 'YYYY-MM').clone().endOf('month').format(this.sDateFormat);
+        } else {
+            sStartDate  = moment(sFromTime, this.sDateFormat).clone().startOf('month').format(this.sDateFormat);
+            sEndDate    = moment(sFromTime, this.sDateFormat).clone().endOf('month').format(this.sDateFormat);
+        }
+        dMoment = moment(sStartDate, this.sDateFormat);
+        do {                        
+            oDateList.FromDate = dMoment.format(this.sDateFormat);
+            oDateList.ToDate = oDateList.FromDate.replace(sFromTime, sToTime);
+            aDateList.push(JSON.parse(JSON.stringify(oDateList)));
+            sDate = dMoment.add(1, this.sDays).format(this.sDateFormat);
+        } while (sDate != sEndDate && sOpType != this.sDateToDate);
+        return aDateList;
+    }
+
     putTxLine(oTxDataIn, sText){
         let oTxDataOut = JSON.parse(JSON.stringify(oTxDataIn));
-        oTxDataOut.lineNumber.value = sText.replace(/-/g, '');
+        oTxDataOut.lineNumber.value = parseInt(oTxDataOut.lineNumber.value.toString() + sText.replace(/-/g, '').toString());
         return oTxDataOut;
     }    
 
@@ -121,7 +144,7 @@ class commController {
         for(let i=0; i<oTxDataOut.transactionAssignments.length; i++){
             oTxAsgnKeys = Object.keys(oTxDataOut.transactionAssignments[i])
             for(let j=0; j<oTxAsgnKeys.length; j++){
-                if(aTxAssignFields.includes(oTxAsgnKeys[j]) == false && oTxAsgnKeys[j].includes('generic') == false){
+                if(this.aTxAssignFields.includes(oTxAsgnKeys[j]) == false && oTxAsgnKeys[j].includes('generic') == false){
                     delete oTxDataOut.transactionAssignments[i][oTxAsgnKeys[j]];
                 }
             }
@@ -132,41 +155,55 @@ class commController {
         return oTxDataOut;    
     }    
 
-    async commTxRepeaterD2D(oConfig){
+    transactionRepeater(oConfig){
+        setTimeout(() => {
+            console.log('called');
+            this.commTxRepeater(oConfig);;
+        }, 20000);        
+        
+    }
 
+    async commTxRepeater(oConfig){
+        let sProcessingUnitSeq = oConfig.ProcessingUnitSeq, sQuery, sFromDate, sToDate, aTxData, oTxData;
         let sLogUUID = this.logger.postLogHead();
+        let aDateList = this.getDatesList(oConfig.OpType, oConfig.FromTime, oConfig.ToTime);
 
-        let sProcessingUnitSeq = oConfig.ProcessingUnitSeq, sQuery, sFromDate = oConfig.FromDate, sToDate = oConfig.ToDate;  
-        sQuery =  this.prepareTxQuery(sFromDate, sProcessingUnitSeq);
+        for(let iCnt=0; iCnt<aDateList.length; iCnt++){
 
-        let aTxData = await this.commAPI.getTxByQuery(sQuery), oTxData;
-        if(aTxData.length <= 0){
-            throw `No Transaction found for date ${sFromDate}`;
-        }
- 
-        for(let i=0; i<aTxData.length; i++){
+            sFromDate = aDateList[iCnt].FromDate, sToDate = aDateList[iCnt].ToDate;
+            sQuery =  this.prepareTxQuery(sFromDate, sProcessingUnitSeq);
 
-            oTxData = JSON.parse(JSON.stringify(aTxData[i]));
-            if(oTxData.value.unitType.name != oConfig.Currency){continue;}      
-            
-            oTxData = this.putTxDateFields(this.sDateToDate, oTxData, sFromDate, sToDate);
-            oTxData = this.putTxLine(oTxData, sToDate);
-            oTxData = this.deleteTxFields(oTxData);
-            oTxData = this.changeTxFields(oTxData);
-            let aTxAsgnData = JSON.parse(JSON.stringify(oTxData.transactionAssignments));
-            //delete oTxData.transactionAssignments;
-            try {
-                let oTxResponse = await this.commAPI.createTransaction(oTxData); 
-                let sTxId = oTxResponse.salesOrder.orderId + ':' + oTxResponse.lineNumber.value;
-                this.logger.postLogItem(sLogUUID, 'Success', 'Transaction creation is successful'+sTxId);               
-            } catch (error) {
-                this.logger.postLogItem(sLogUUID, 'Error', 'Transaction creation is failed', JSON.stringify(error));
-                continue;
+            aTxData = await this.commAPI.getTxByQuery(sQuery);
+            aTxData.length <= 0 ? this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_WARNING, 'No transaction found for date: '+sFromDate) : this.logger.postLogItem(sLogUUID, 'Information', aTxData.length+' transactions found for date: '+sFromDate);
+     
+            for(let i=0; i<aTxData.length; i++){    
+                oTxData = JSON.parse(JSON.stringify(aTxData[i]));
+                if(oTxData.value.unitType.name != oConfig.Currency){continue;}      
+                
+                oTxData = this.putTxDateFields(this.sDateToDate, oTxData, sFromDate, sToDate);
+                oTxData = this.putTxLine(oTxData, sToDate);
+                oTxData = this.deleteTxFields(oTxData);
+                oTxData = this.changeTxFields(oTxData);
+                console.log(oTxData)
+                try {
+                    let oTxResponse = await this.commAPI.createTransaction(oTxData); 
+                    let sTxId = oTxResponse.salesOrder.orderId + ':' + oTxResponse.lineNumber.value;
+                    this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_SUCCESS, 'Transaction creation is successful - '+sTxId);               
+                } catch (error) {
+                    this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_ERROR, error.message, JSON.stringify(error));
+                    continue;
+                }
             }
-            //let oTxAsgnData = {salesTransactionSeq:oTxResponse.salesTransactionSeq, transactionAssignments:aTxAsgnData}
+
         }
-
-
+        let oLogInfo = this.logger.getLogCountByUUID(sLogUUID), sSubject, sHtmlBody='';
+        sSubject    = 'Status update on your transaction repeater request';
+        sHtmlBody   = sHtmlBody + `Hi,<br><br>Please find status on your transaction repeater request below:<br><br>`;
+        sHtmlBody   = sHtmlBody + `No of Transaction repeated Successfully: ${oLogInfo.SuccessCount}<br>`;
+        sHtmlBody   = sHtmlBody + `No of Transaction repeated Unsuccessfully: ${oLogInfo.ErrorCount}<br><br>`;
+        sHtmlBody   = sHtmlBody + `Best Regards,<br>PreSales Engineering | SAP Successfactors`
+        let oMailer = new mailer();
+        oMailer.sendEmail(oConfig.ReqEmail, sSubject, sHtmlBody);
     }
 
 }
