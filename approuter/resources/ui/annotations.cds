@@ -1,0 +1,1 @@
+using SPMHubService as service from '../../srv/service';

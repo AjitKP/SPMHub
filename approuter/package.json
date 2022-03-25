@@ -4,15 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node node_modules/@sap/approuter/approuter.js"
+    "start": "node ./approuter-start.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sap/approuter": "^10.14.0"
+    "@sap/approuter": "^10.14.0",
+    "jwt-decode": "^3.1.2"
   },
   "engines": {
-      "node": "^14.0.0"
+    "node": "^14.0.0"
   }
 }

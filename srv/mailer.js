@@ -1,11 +1,12 @@
 var nodemailer = require('nodemailer');
 let dotenv = require('dotenv');
-
+dotenv.config({path:__dirname+'/.env'});
 
 class srvMailer{
 
     constructor(){
-        dotenv.config();
+        console.log('Mailer Constructor');
+        console.log(__dirname);
         console.log(process.env.SPMHUB_MAIL_USER);
         console.log(process.env.SPMHUB_MAIL_PASS);
         this.transporter = nodemailer.createTransport({
@@ -27,8 +28,8 @@ class srvMailer{
         oMailConfig.html    = sHtmlBody;
 
         this.transporter.sendMail(oMailConfig, function(error, info){
-            if(error){ return console.log(error); }        
-            console.log('Message sent: ' + info.response);
+            // if(error){ return console.log(error); }        
+            // console.log('Message sent: ' + info.response);
         });
     }
 

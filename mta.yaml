@@ -24,6 +24,9 @@ modules:
       - name: srv-api # required by consumers of CAP services (e.g. approuter)
         properties:
           srv-url: ${default-url}
+      - name: srv-wsapi # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: wss://${default-uri}          
     requires:
       - name: spmhub-db
       - name: spmhub-uaa
@@ -40,6 +43,13 @@ modules:
           strictSSL: true
           name: srv-binding
           url: '~{srv-url}'
+      - name: srv-wsapi
+        group: destinations
+        properties:
+          forwardAuthToken: true
+          strictSSL: true
+          name: srv-wsbinding
+          url: '~{srv-url}'          
     build-parameters:
       requires:
         - name: spmhub-app
@@ -59,6 +69,7 @@ modules:
       buildpack: nodejs_buildpack
     requires:
       - name: spmhub-db
+      - name: spmhub-uaa
 
 resources:
   - name: spmhub-db
@@ -82,4 +93,5 @@ resources:
           - name: 'SPMHubUser-${space}'
             description: Manage Risks
             role-template-references:
-              - $XSAPPNAME.SPMHubUser        
+              - $XSAPPNAME.SPMHubUser    
+

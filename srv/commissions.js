@@ -101,7 +101,7 @@ class srvCommissions {
             }
             return oResponse.data.salesTransactions[0];            
         } catch (error) {
-            console.log(JSON.stringify(error));
+            //console.log(JSON.stringify(error));
             throw error;
         }
     }    

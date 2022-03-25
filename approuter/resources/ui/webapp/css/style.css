@@ -1,0 +1,38 @@
+/* Enter your custom styles here */
+
+.sapUiSizeCompact .sapMBtn {
+    height: 2rem;
+}
+
+.sapUiSizeCompact .sapMBtnInner {
+    height: 2rem;
+    min-width: 2rem;
+}
+
+.sapUiSizeCompact .sapMBtnContent {
+    line-height: 2rem;
+}
+
+.sapUiSizeCompact .sapMBtnIcon {
+    line-height: 2rem;
+}
+
+.borderTop{
+border-top: 0.0625rem solid #ccc;
+}
+
+.zSegmentedButton {
+    min-width: 450px !important;
+}
+
+.zsapUiTinyPadding {
+    padding: 0.5rem !important;
+}
+.zsapUiTinyPadding sapMPanelContent {
+    padding-bottom: 0.625rem !important;
+}
+
+.sapMPanelContent {
+    padding-bottom: 0.625rem !important;
+}
+

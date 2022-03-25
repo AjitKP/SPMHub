@@ -13,20 +13,26 @@ const sLogDetailFilePath = path.join(__dirname, 'data', 'logDetail.json');
 
 class srvLogger {
 
-    constructor(sTenantId, sReqType){
+    constructor(sTenantId, sReqType, sReqUser, sReqEmail){
         this.TenantId   = sTenantId;
         this.ReqType    = sReqType;
+        this.ReqUser    = sReqUser;
+        this.ReqEmail   = sReqEmail;
     }
 
-    postLogHead(){
-        let oLogHead = {};
+    postLogHead(oInput){
+        let oLogHead = {}; if(oInput == undefined){oInput='';}
         oLogHead.TenantId   = this.TenantId;
         oLogHead.DateTime   = moment(new Date()).format("yyyy-MM-DDTHH:mm:ss")
         oLogHead.LogUUID    = uuid4();
         oLogHead.ReqType    = this.ReqType;
+        oLogHead.ReqUser    = this.ReqUser;
+        oLogHead.ReqEmail   = this.ReqEmail;
+        oLogHead.ReqInput   = JSON.parse(JSON.stringify(oInput));
         let aLogHeadData    = JSON.parse(fs.readFileSync(sLogHeaderFilePath));
         aLogHeadData.push(oLogHead);
         fs.writeFileSync(sLogHeaderFilePath, JSON.stringify(aLogHeadData)); 
+        console.log('postLogHead:'+oLogHead.LogUUID);
         return oLogHead.LogUUID;
     }
 
@@ -59,7 +65,7 @@ class srvLogger {
         let aLogHeadItems = JSON.parse(fs.readFileSync(sLogDetailFilePath)), iSuccessCount=0, iErrorCount=0;
         for(let i=0; i<aLogHeadItems.length; i++){
             if(aLogHeadItems[i].LogUUID == sLogUUID){
-                for(let j=0; j<aLogHeadItems[i].LogItems; j++){
+                for(let j=0; j<aLogHeadItems[i].LogItems.length; j++){
                     if(aLogHeadItems[i].LogItems[j].LogItemType == constants.LOG_TYPE_SUCCESS){
                         iSuccessCount = iSuccessCount + 1;
                     }
@@ -70,6 +76,13 @@ class srvLogger {
             }
         }
         return {SuccessCount:iSuccessCount, ErrorCount:iErrorCount};
+    }
+
+    getCompleteLogs(){
+        let aLogHeadData    = JSON.parse(fs.readFileSync(sLogHeaderFilePath));
+        let aLogHeadItems   = JSON.parse(fs.readFileSync(sLogDetailFilePath));
+        let oAllLogs        = {LogHeads:aLogHeadData,LogItems:aLogHeadItems};
+        return oAllLogs;
     }
 
 }

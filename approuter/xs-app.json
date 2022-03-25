@@ -2,6 +2,9 @@
     "welcomeFile": "/app/ui/webapp/index.html",
     "authenticationMethod": "route",
     "sessionTimeout": 30,
+    "websockets": {
+        "enabled": true
+    },    
     "logout": {
         "logoutEndpoint": "/do/logout",
         "logoutPage": "/"
@@ -12,9 +15,15 @@
             "target": "$1",
             "localDir": "resources",
             "authenticationType": "xsuaa"
-        },
+        },                 
         {
-            "source": "^/service/(.*)$",
+            "source": "^/v2/hxm/spmhub/service/ws(.*)$",
+            "destination": "srv-wsbinding",
+            "csrfProtection": false,
+            "authenticationType": "none"
+        },            
+        {
+            "source": "^/v2/hxm/spmhub/service/(.*)$",
             "destination": "srv-binding",
             "csrfProtection": false,
             "authenticationType": "xsuaa"

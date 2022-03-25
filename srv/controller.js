@@ -3,6 +3,7 @@ const moment    = require('moment');
 const constants = require('./constants');
 const logger    = require('./logger');
 const mailer    = require('./mailer');
+const WebSocketServer = require('ws').Server;
 
 class commController {
 
@@ -15,12 +16,32 @@ class commController {
     sDateFormat     = constants.DATE_FORMAT;
     sDays           = constants.TIME_DAYS; 
     sMonths         = constants.TIME_MONTHS;
+    sLogUUID        = '';
+    static ws = new WebSocketServer({ port: 8081 });
 
-    constructor(sTenantId, sUserName, sPassword, sReqType){
+
+    constructor(sTenantId, sUserName, sPassword, sReqType, sReqUser, sReqEmail){
         sReqType == undefined ? sReqType = 'Credentials' : sReqType = sReqType;
         this.commAPI = new commapi(sTenantId, sUserName, sPassword);
-        this.logger  = new logger(sTenantId, sReqType);
+        this.logger  = new logger(sTenantId, sReqType);     
+        commController.ws.on('connection', function (socket) {
+            socket.send('Hi, this is the Echo-Server');
+            socket.on('message', function (message) {
+              console.log('Received Message: ' +  message);
+              socket.send('Echo: ' + message);
+            });
+          });                      
     }    
+    
+    async createLogHead(oInput){
+        this.sLogUUID = this.logger.postLogHead(oInput);
+        console.log("createLogHead"+this.sLogUUID);
+        return this.sLogUUID;
+    }
+    
+    async getAllLogs(){
+        return JSON.stringify(this.logger.getCompleteLogs());
+    }
         
     async verifyCommCredentials(){
         return await this.commAPI.verifyUser();
@@ -164,8 +185,10 @@ class commController {
     }
 
     async commTxRepeater(oConfig){
-        let sProcessingUnitSeq = oConfig.ProcessingUnitSeq, sQuery, sFromDate, sToDate, aTxData, oTxData;
-        let sLogUUID = this.logger.postLogHead();
+        console.log('commTxRepeater:'+JSON.stringify(oConfig));
+        console.log('commTxRepeater-sLogUUID:'+this.sLogUUID);
+        let sProcessingUnitSeq = oConfig.ProcessingUnitSeq, sQuery, sFromDate, sToDate, aTxData, oTxData, oLogItem;
+        let sLogUUID = this.sLogUUID == ''? this.logger.postLogHead(): this.sLogUUID;
         let aDateList = this.getDatesList(oConfig.OpType, oConfig.FromTime, oConfig.ToTime);
 
         for(let iCnt=0; iCnt<aDateList.length; iCnt++){
@@ -184,19 +207,22 @@ class commController {
                 oTxData = this.putTxLine(oTxData, sToDate);
                 oTxData = this.deleteTxFields(oTxData);
                 oTxData = this.changeTxFields(oTxData);
-                console.log(oTxData)
                 try {
                     let oTxResponse = await this.commAPI.createTransaction(oTxData); 
                     let sTxId = oTxResponse.salesOrder.orderId + ':' + oTxResponse.lineNumber.value;
-                    this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_SUCCESS, 'Transaction creation is successful - '+sTxId);               
+                    oLogItem = this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_SUCCESS, 'Transaction creation is successful - '+sTxId);
+                    for (const client of commController.ws.clients) { client.send(JSON.stringify(oLogItem)); }                                   
                 } catch (error) {
-                    this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_ERROR, error.message, JSON.stringify(error));
+                    oLogItem = this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_ERROR, error.message, JSON.stringify(error));
+                    for (const client of commController.ws.clients) { client.send(JSON.stringify(oLogItem)); } 
                     continue;
                 }
             }
 
         }
+        console.log('Before Mail'+sLogUUID);
         let oLogInfo = this.logger.getLogCountByUUID(sLogUUID), sSubject, sHtmlBody='';
+        console.log('Mail Reached'+JSON.stringify(oLogInfo));
         sSubject    = 'Status update on your transaction repeater request';
         sHtmlBody   = sHtmlBody + `Hi,<br><br>Please find status on your transaction repeater request below:<br><br>`;
         sHtmlBody   = sHtmlBody + `No of Transaction repeated Successfully: ${oLogInfo.SuccessCount}<br>`;
