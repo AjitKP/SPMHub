@@ -10,6 +10,8 @@ service SPMHubService {
     function VerifyCredentials() returns String(20);
     function GetUserInfo() returns String;
     function GetAllLogs() returns String;
-    action TransactionRepeater (OpType:String, ProcessingUnitSeq:String, Currency:String, FromTime:String, ToTime:String, ReqEmail:String) returns String(200);
+    function GetLogsByUUID(LogUUID:String) returns String;
+    function GetAllTxRepeaters() returns String;
+    action TransactionRepeater (OpType:String, ProcessingUnitSeq:String, BusinessUnit:String, Currency:String, FromTime:String, ToTime:String, ReqEmail:String, ReqUser:String) returns String(200);
 
 }

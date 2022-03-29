@@ -94,28 +94,56 @@
           ]
         },
         {
+            "name": "RouteTxRSummary",
+            "pattern": "RouteTxRSummary",
+            "target": [
+              "TargetTxRSummary"
+            ]
+          },        
+        {
             "name": "RouteDetail",
             "pattern": "RouteDetail",
             "target": [
               "TargetDetail"
             ]
-          }        
+        },
+        {
+            "name": "RouteDetailLog",
+            "pattern": "RouteDetailLog/{LogUUID}",
+            "target": [
+              "TargetDetailLog"
+            ]
+        }                
       ],
       "targets": {
-        "TargetMain": {
+        "TargetTxRSummary": {
           "viewType": "XML",
           "transition": "slide",
           "clearControlAggregation": false,
-          "viewId": "Main",
-          "viewName": "Main"
+          "viewId": "TxRSummary",
+          "viewName": "TxRSummary"
         },
+        "TargetMain": {
+            "viewType": "XML",
+            "transition": "slide",
+            "clearControlAggregation": false,
+            "viewId": "Main",
+            "viewName": "Main"
+          },        
         "TargetDetail": {
             "viewType": "XML",
             "transition": "slide",
             "clearControlAggregation": false,
             "viewId": "Detail",
             "viewName": "Detail"
-          }        
+        },
+        "TargetDetailLog": {
+            "viewType": "XML",
+            "transition": "slide",
+            "clearControlAggregation": false,
+            "viewId": "DetailLog",
+            "viewName": "DetailLog"
+        }         
       }
     },
     "rootView": {

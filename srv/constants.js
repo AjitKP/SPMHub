@@ -11,5 +11,9 @@ module.exports = Object.freeze({
     LOG_TYPE_ERROR      : 'Error',
     LOG_TYPE_WARNING    : 'Warning',
     LOG_TYPE_INFO       : 'Information',
-    LOG_TYPE_DEBUG      : 'Debug'
+    LOG_TYPE_DEBUG      : 'Debug',
+    LOG_STAT_SUBMIT     : 'Submitted',
+    LOG_STAT_INPROCESS  : 'In Process',
+    LOG_STAT_COMPLETE   : 'Complete',
+    DATE_DISPLAY_FORMAT : 'DD-MM-yyyyTHH:mm:ss'
 })

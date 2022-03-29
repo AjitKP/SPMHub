@@ -23,17 +23,30 @@ class srvLogger {
     postLogHead(oInput){
         let oLogHead = {}; if(oInput == undefined){oInput='';}
         oLogHead.TenantId   = this.TenantId;
-        oLogHead.DateTime   = moment(new Date()).format("yyyy-MM-DDTHH:mm:ss")
+        oLogHead.CDateTime  = moment(new Date()).format(constants.DATE_DISPLAY_FORMAT);
         oLogHead.LogUUID    = uuid4();
         oLogHead.ReqType    = this.ReqType;
         oLogHead.ReqUser    = this.ReqUser;
         oLogHead.ReqEmail   = this.ReqEmail;
+        oLogHead.UDateTime  = oLogHead.CDateTime;
+        oLogHead.ReqStatus  = constants.LOG_STAT_SUBMIT;
         oLogHead.ReqInput   = JSON.parse(JSON.stringify(oInput));
         let aLogHeadData    = JSON.parse(fs.readFileSync(sLogHeaderFilePath));
         aLogHeadData.push(oLogHead);
         fs.writeFileSync(sLogHeaderFilePath, JSON.stringify(aLogHeadData)); 
-        console.log('postLogHead:'+oLogHead.LogUUID);
         return oLogHead.LogUUID;
+    }
+
+    setLogHeadStatus(sLogUUID, sStatus){
+        let aLogHeadData    = JSON.parse(fs.readFileSync(sLogHeaderFilePath));
+        for(let i=0; i<aLogHeadData.length; i++){
+            if(aLogHeadData[i].LogUUID == sLogUUID){
+                aLogHeadData[i].UDateTime   = moment(new Date()).format(constants.DATE_DISPLAY_FORMAT);
+                aLogHeadData[i].ReqStatus   = sStatus;
+                fs.writeFileSync(sLogHeaderFilePath, JSON.stringify(aLogHeadData)); 
+                break;
+            }
+        }
     }
 
     postLogItem(sLogUUID,sLogType,sLogMsg, sLogData){
@@ -51,7 +64,7 @@ class srvLogger {
             oLogHeadItem = JSON.parse(JSON.stringify(aLogHeadItems[iRowIndex]));
             aLogHeadItems.splice(iRowIndex, 1);
         }        
-        oLogItem.DateTime       = moment(new Date()).format("yyyy-MM-DDTHH:mm:ss")
+        oLogItem.DateTime       = moment(new Date()).format(constants.DATE_DISPLAY_FORMAT)
         oLogItem.LogItemType    = sLogType;
         oLogItem.LogItemMessage = sLogMsg;
         sLogData == undefined? oLogItem.LogItemData = '' : oLogItem.LogItemData = sLogData;
@@ -76,6 +89,49 @@ class srvLogger {
             }
         }
         return {SuccessCount:iSuccessCount, ErrorCount:iErrorCount};
+    }
+
+    getLogsByUUID(sLogUUID){
+        let oLog = {};
+        let aLogHeadData    = JSON.parse(fs.readFileSync(sLogHeaderFilePath));
+        let aLogHeadItems   = JSON.parse(fs.readFileSync(sLogDetailFilePath));
+        for(let i=0; i<aLogHeadData.length; i++){
+            if(aLogHeadData[i].LogUUID == sLogUUID){
+                oLog.LogHead = JSON.parse(JSON.stringify(aLogHeadData[i])); break;
+            }
+        }        
+        for(let j=0; j<aLogHeadItems.length; j++){
+            if(aLogHeadItems[j].LogUUID == sLogUUID){
+                oLog.LogItems = JSON.parse(JSON.stringify(aLogHeadItems[j])); break;
+            }
+        }    
+        return oLog;          
+    }
+
+    getAllTxRepeaterRequestsByTenantId(){
+        let oLog = {}, aLogRequests = [];
+        let aLogHeadData    = JSON.parse(fs.readFileSync(sLogHeaderFilePath));
+        // let aLogHeadItems   = JSON.parse(fs.readFileSync(sLogDetailFilePath));
+        for(let i=0; i<aLogHeadData.length; i++){
+            if(aLogHeadData[i].TenantId == this.TenantId){   
+                switch (aLogHeadData[i].ReqType) {
+                    case constants.DATE_TO_DATE:
+                        aLogHeadData[i].ReqType = 'Day to Day'
+                        break;    
+                    case constants.MONTH_TO_MONTH:
+                        aLogHeadData[i].ReqType = 'Month to Month'
+                        break; 
+                    case constants.YEAR_TO_YEAR:
+                        aLogHeadData[i].ReqType = 'Year to Year'
+                        break;                                                                 
+                    default:
+                        break;
+                }             
+                aLogRequests.push(JSON.parse(JSON.stringify(aLogHeadData[i])));               
+            }
+        };        
+        oLog.LogHead = JSON.parse(JSON.stringify(aLogRequests)); 
+        return oLog;          
     }
 
     getCompleteLogs(){

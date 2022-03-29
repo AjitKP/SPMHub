@@ -1,0 +1,77 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns="sap.m"  controllerName="hxm.spm.ui.controller.TxRSummary" xmlns:card="sap.f.cards" xmlns:core="sap.ui.core" xmlns:tnt="sap.tnt" displayBlock="true">
+    <Shell id="shell">
+        <App id="app">
+            <pages>      
+                <Page title="Sales Transaction Repeater Requests List" titleAlignment="Center" backgroundDesign="Solid" showFooter="true">
+                    <content>
+                        <Panel id="idPanelMain" class="zsapUiTinyPadding" backgroundDesign="Solid" >
+                            <headerToolbar>
+                                <OverflowToolbar height="60px">                                    
+                                <content>
+                                    <Title text="Transaction Repeater Requests" level="H4"/>
+                                    <ToolbarSpacer />
+                                    <Button text="New Request" width="150px" type="Attention" icon="sap-icon://create" press="onRequestSubmit" />
+                                </content>
+                                </OverflowToolbar>
+                            </headerToolbar>   
+                            <content>                           
+                                <Panel id="idPanelLogItem" >
+                                    <Table id="idLogItemTable" inset="false" items="{TxRLog>/LogHead}" class="sapUiSizeCompact">
+                                        <headerToolbar>
+                                        </headerToolbar>
+                                        <columns>
+                                            <Column width="11%">
+                                                <Text text="Request Type" />
+                                            </Column>                                        
+                                            <Column width="11%">
+                                                <Text text="Business Unit" />
+                                            </Column>
+                                             <Column width="11%">
+                                                <Text text="From Time" />
+                                            </Column>
+                                             <Column width="11%">
+                                                <Text text="To Time" />
+                                            </Column> 
+                                             <Column width="10%">
+                                                <Text text="Currency" />
+                                            </Column>         
+                                             <Column width="15%">
+                                                <Text text="Requested By" />
+                                            </Column>        
+                                             <Column width="11%">
+                                                <Text text="Status" />
+                                            </Column>  
+                                             <Column width="20%">
+                                                <Text text="Last Updated" />
+                                            </Column>                                                                                                                                                                                                           
+                                        </columns>
+                                        <items>
+                                            <ColumnListItem vAlign="Middle">
+                                                <cells>
+                                                    <Text text="{TxRLog>ReqType}" /> 
+                                                    <Text text="{TxRLog>ReqInput/BusinessUnit}" />  
+                                                    <Text text="{TxRLog>ReqInput/FromTime}" />  
+                                                    <Text text="{TxRLog>ReqInput/ToTime}" />   
+                                                    <Text text="{TxRLog>ReqInput/Currency}" />   
+                                                    <Text text="{TxRLog>ReqUser}" />  
+                                                    <Text text="{TxRLog>ReqStatus}" />   
+                                                    <Text text="{TxRLog>UDateTime}" />                                                    
+                                                </cells>
+                                            </ColumnListItem>
+                                        </items>
+                                    </Table>
+                                </Panel>                                                                                          
+                            </content>
+                        </Panel>
+                    </content>
+                    <footer>
+                        <OverflowToolbar>
+                            <ToolbarSpacer />
+                            <Button text="" type="Accept" visible="false" />
+                        </OverflowToolbar>
+                    </footer>                    
+                </Page>     
+            </pages>
+        </App>
+    </Shell>
+</mvc:View>

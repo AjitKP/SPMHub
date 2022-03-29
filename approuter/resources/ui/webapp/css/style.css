@@ -26,7 +26,8 @@ border-top: 0.0625rem solid #ccc;
 }
 
 .zsapUiTinyPadding {
-    padding: 0.5rem !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
 }
 .zsapUiTinyPadding sapMPanelContent {
     padding-bottom: 0.625rem !important;
@@ -34,5 +35,15 @@ border-top: 0.0625rem solid #ccc;
 
 .sapMPanelContent {
     padding-bottom: 0.625rem !important;
+    padding-left:  0.5rem !important;
+    padding-right:  0.5rem !important;
+}
+
+.sapMPanelContent:not(.sapMPanelBGTransparent) {
+    border-bottom: 0.0625rem solid #d9d9d9;
+}
+
+sapUiRespGrid.sapUiRespGridVSpace1>div {
+    margin-bottom: 0rem;
 }
 

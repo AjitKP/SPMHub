@@ -1,0 +1,120 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:l="sap.ui.layout" xmlns="sap.m" controllerName="hxm.spm.ui.controller.DetailLog" xmlns:card="sap.f.cards" xmlns:core="sap.ui.core" xmlns:tnt="sap.tnt" displayBlock="true">
+    <Shell id="shell">
+        <App id="app">
+            <pages>      
+                <Page title="Sales Transaction Repeater" titleAlignment="Center" backgroundDesign="Solid" showFooter="true">
+                    <content>
+                        <Panel height="100%" class="zsapUiTinyPadding" backgroundDesign="Solid" >
+                            <headerToolbar>
+                                <OverflowToolbar height="75px">                                    
+                                    <HBox justifyContent="Center" width="100%" alignItems="Center" class="sapUiSmallMargin" >
+                                        <Label text="Choose TX Repeater Option" labelFor="SBtn1" class="sapUiSmallMarginBeginEnd"/>
+                                        <SegmentedButton id="SBtn1" selectedKey="Y2Y" width="100%" class="zSegmentedButton" selectionChange="onSBSelectionChange" enabled="false">
+                                            <items>
+                                                <SegmentedButtonItem text="Year to Year" key="Y2Y" icon="sap-icon://calendar" />
+                                                <SegmentedButtonItem text="Month to Month" key="M2M" icon="sap-icon://legend" />
+                                                <SegmentedButtonItem text="Day to Day" key="D2D" icon="sap-icon://accelerated"/>
+                                            </items>
+                                        </SegmentedButton>
+                                    </HBox>
+                                </OverflowToolbar>
+                            </headerToolbar>   
+                            <content>                           
+                                <Panel id="PY2Y" class="zsapUiTinyPadding" backgroundDesign="Solid" height="100%" >       
+                                    <l:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBeginEnd">
+                                        <HBox alignItems="Center" justifyContent="Start">
+                                            <Label text="Business Unit" labelFor="SBUY1" class="sapUiSmallMarginBeginEnd"/>
+                                            <Select	id="idSBUY1" forceSelection="false" items="{path: '/BusinessUnits', sorter: { path: 'name' }}" enabled="false">
+					                            <core:Item key="{processingUnit}" text="{name}" />
+				                            </Select>  
+                                        </HBox>                                          
+                                        <HBox alignItems="Center" justifyContent="Start">
+                                            <Label text="From Year" labelFor="DPY1" class="sapUiSmallMarginBeginEnd"/>
+                                            <DatePicker id="idDPY1" displayFormat="yyyy" valueFormat="yyyy" change="handleChange" enabled="false"/>    
+                                        </HBox>      
+                                        <HBox alignItems="Center" justifyContent="Start">                                                                                      
+                                            <Label text="To Year" labelFor="DPY2" class="sapUiSmallMarginBeginEnd"/>
+                                            <DatePicker id="idDPY2" displayFormat="yyyy" valueFormat="yyyy" change="handleChange" enabled="false"/>  
+                                        </HBox>  
+                                        <HBox alignItems="Center" justifyContent="Start">                                                                                      
+                                            <Label text="Currency" labelFor="SY3" class="sapUiSmallMarginBeginEnd"/>
+                                            <Select	id="idSY3" forceSelection="false" width="150px"	enabled="false">
+                                                <core:Item key="USD" text="USD" />
+                                                <core:Item key="EUR" text="EUR" />
+                                            </Select>  
+                                        </HBox>       
+                                    </l:Grid>      
+                                    <HBox alignItems="Center" justifyContent="End" class="zsapUiTinyPadding sapUiLargeMarginBeginEnd" visible="false">
+                                        <Button text="Submit" type="Accept" width="100px" icon="sap-icon://begin" press="onRequestSubmit"/>                                        
+                                    </HBox>                                                                                        
+                                </Panel>
+                                <Panel id="PM2M" class="zsapUiTinyPadding" backgroundDesign="Solid" height="100%" visible="false">       
+                                    <l:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBeginEnd">
+                                        <HBox alignItems="Center" justifyContent="Start">
+                                            <Label text="Business Unit" labelFor="SBUM1" class="sapUiSmallMarginBeginEnd"/>
+                                            <Select id="idSBUM1"	forceSelection="false" items="{path: '/BusinessUnits', sorter: { path: 'name' }}" enabled="false">
+					                            <core:Item key="{processingUnit}" text="{name}" />
+				                            </Select>  
+                                        </HBox>  
+                                        <HBox alignItems="Center" justifyContent="Start">
+                                            <Label text="From Month" labelFor="DPM1" class="sapUiSmallMarginBeginEnd"/>
+                                            <DatePicker id="idDPM1" displayFormat="MM-yyyy" valueFormat="yyyy-MM" change="handleChange" enabled="false"/>    
+                                        </HBox>                                                                                    
+                                        <HBox alignItems="Center" justifyContent="Start">                                                                                      
+                                            <Label text="To Month" labelFor="DPM2" class="sapUiSmallMarginBeginEnd"/>
+                                            <DatePicker id="idDPM2" displayFormat="MM-yyyy" valueFormat="yyyy-MM" change="handleChange" enabled="false"/>  
+                                        </HBox>  
+                                        <HBox alignItems="Center" justifyContent="Start">                                                                                      
+                                            <Label text="Currency" labelFor="SM3" class="sapUiSmallMarginBeginEnd"/>
+                                            <Select	id="idSM3" forceSelection="false" width="150px"	enabled="false">
+                                                <core:Item key="USD" text="USD" />
+                                                <core:Item key="EUR" text="EUR" />
+                                            </Select>  
+                                        </HBox>                                                                                                                            
+                                    </l:Grid> 
+                                    <HBox alignItems="Center" justifyContent="End" class="zsapUiTinyPadding sapUiLargeMarginBeginEnd" visible="false">
+                                        <Button text="Submit" type="Accept" width="100px" icon="sap-icon://begin" press="onRequestSubmit"/>                                        
+                                    </HBox>                                                                                                 
+                                </Panel>      
+                                <Panel id="PD2D" class="zsapUiTinyPadding" backgroundDesign="Solid" height="100%" visible="false">       
+                                    <l:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBeginEnd">
+                                        <HBox alignItems="Center" justifyContent="Start">
+                                            <Label text="Business Unit" labelFor="SBUD1" class="sapUiSmallMarginBeginEnd"/>
+                                            <Select id="idSBUD1"	forceSelection="false" items="{path: '/BusinessUnits', sorter: { path: 'name' }}" enabled="false">
+					                            <core:Item key="{processingUnit}" text="{name}" />
+				                            </Select>  
+                                        </HBox>  
+                                        <HBox alignItems="Center" justifyContent="Start">
+                                            <Label text="From Date" labelFor="DPD1" class="sapUiSmallMarginBeginEnd"/>
+                                            <DatePicker id="idDPD1" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd" change="handleChange" enabled="false"/>    
+                                        </HBox>                                                                                    
+                                        <HBox alignItems="Center" justifyContent="Start">                                                                                      
+                                            <Label text="To Date" labelFor="DPD2" class="sapUiSmallMarginBeginEnd"/>
+                                            <DatePicker id="idDPD2" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd" change="handleChange" enabled="false"/>  
+                                        </HBox>  
+                                        <HBox alignItems="Center" justifyContent="Start">                                                                                      
+                                            <Label text="Currency" labelFor="SD3" class="sapUiSmallMarginBeginEnd"/>
+                                            <Select	id="idSD3" forceSelection="false" width="150px"	enabled="false">
+                                                <core:Item key="USD" text="USD" />
+                                                <core:Item key="EUR" text="EUR" />
+                                            </Select>  
+                                        </HBox>                                                                                                                            
+                                    </l:Grid> 
+                                    <HBox alignItems="Center" justifyContent="End" class="zsapUiTinyPadding sapUiLargeMarginBeginEnd" visible="false">
+                                        <Button text="Submit" type="Accept" width="100px" icon="sap-icon://begin" press="onRequestSubmit"/>                                        
+                                    </HBox>                                                                                                
+                                </Panel>                                                           
+                            </content>
+                        </Panel>
+                    </content>
+                    <footer>
+                        <OverflowToolbar>
+                            <ToolbarSpacer />
+                            <Button text="" type="Accept" visible="false" />
+                        </OverflowToolbar>
+                    </footer>                    
+                </Page>     
+            </pages>
+        </App>
+    </Shell>
+</mvc:View>

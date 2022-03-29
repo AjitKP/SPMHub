@@ -59,7 +59,7 @@ sap.ui.define([
                     // eslint-disable-next-line no-undef
                     success: jQuery.proxy(function (oData) {
                         var msg = "Either user id or Password is Incorrect. Try again!"
-                        oData.VerifyCredentials == sUser ? this.getOwnerComponent().getRouter().navTo("RouteDetail"): MessageBox.error(msg, {styleClass: "sapUiSizeCompact"});
+                        oData.VerifyCredentials == sUser ? this.getOwnerComponent().getRouter().navTo("RouteTxRSummary"): MessageBox.error(msg, {styleClass: "sapUiSizeCompact"});
                     }).bind(this),
                     // eslint-disable-next-line no-undef
                     error: jQuery.proxy(function (oError) {

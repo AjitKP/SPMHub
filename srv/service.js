@@ -35,6 +35,18 @@ module.exports = cds.service.impl(async function () {
         console.log("reached GetAllLogs")
         const commSrv = this.fnInstantiateCommService(req, 'AllLogs');
         return commSrv.getAllLogs();
+    })      
+    
+    this.on('GetAllTxRepeaters',async(req)=>{
+        console.log("reached GetAllTxRepeaters")
+        const commSrv = this.fnInstantiateCommService(req, 'AllTxRepeaters');
+        return commSrv.getAllTxRepeaterRequestsByTenantId();
+    })      
+
+    this.on('GetLogsByUUID',async(req)=>{
+        console.log("reached GetLogsByUUID")
+        const commSrv = this.fnInstantiateCommService(req, 'AllLogs');
+        return commSrv.getLogsByUUID(req.data.LogUUID);
     })        
 
     this.on('TransactionRepeater', async(req)=>{

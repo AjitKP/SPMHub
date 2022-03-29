@@ -17,20 +17,20 @@ class commController {
     sDays           = constants.TIME_DAYS; 
     sMonths         = constants.TIME_MONTHS;
     sLogUUID        = '';
-    static ws = new WebSocketServer({ port: 8081 });
+    // static ws = new WebSocketServer({ port: 8081 });
 
 
     constructor(sTenantId, sUserName, sPassword, sReqType, sReqUser, sReqEmail){
         sReqType == undefined ? sReqType = 'Credentials' : sReqType = sReqType;
         this.commAPI = new commapi(sTenantId, sUserName, sPassword);
-        this.logger  = new logger(sTenantId, sReqType);     
-        commController.ws.on('connection', function (socket) {
-            socket.send('Hi, this is the Echo-Server');
-            socket.on('message', function (message) {
-              console.log('Received Message: ' +  message);
-              socket.send('Echo: ' + message);
-            });
-          });                      
+        this.logger  = new logger(sTenantId, sReqType, sReqUser, sReqEmail);     
+        // commController.ws.on('connection', function (socket) {
+        //     socket.send('Hi, this is the Echo-Server');
+        //     socket.on('message', function (message) {
+        //       console.log('Received Message: ' +  message);
+        //       socket.send('Echo: ' + message);
+        //     });
+        //   });                      
     }    
     
     async createLogHead(oInput){
@@ -42,7 +42,15 @@ class commController {
     async getAllLogs(){
         return JSON.stringify(this.logger.getCompleteLogs());
     }
-        
+
+    async getLogsByUUID(sLogUUID){
+        return JSON.stringify(this.logger.getLogsByUUID(sLogUUID));
+    }    
+
+    async getAllTxRepeaterRequestsByTenantId(){
+        return JSON.stringify(this.logger.getAllTxRepeaterRequestsByTenantId());
+    }        
+    
     async verifyCommCredentials(){
         return await this.commAPI.verifyUser();
     }
@@ -135,16 +143,12 @@ class commController {
         let oTxDataOut = JSON.parse(JSON.stringify(oTxDataIn));
         
         //Delete Fields from aDeltFlds
-        this.aDeleteFields.forEach(sFieldKey => {
-            delete oTxDataOut[sFieldKey];
-        });
+        this.aDeleteFields.forEach(sFieldKey => { delete oTxDataOut[sFieldKey]; });
     
         //Delete fields with null value
         let aFields = Object.keys(oTxDataOut);
         aFields.forEach(sFieldKey => {
-            if(oTxDataOut[sFieldKey] == null){
-                delete oTxDataOut[sFieldKey];
-            }
+            if(oTxDataOut[sFieldKey] == null){ delete oTxDataOut[sFieldKey]; }
         });    
         return oTxDataOut;        
     }    
@@ -153,11 +157,9 @@ class commController {
         let oTxDataOut = JSON.parse(JSON.stringify(oTxDataIn));
                 
         let sProcessingUnitSeq = oTxDataOut.processingUnit;                         //Processing Unit
-        oTxDataOut.processingUnit = [{ processingUnitSeq:sProcessingUnitSeq }];    
-        
+        oTxDataOut.processingUnit = [{ processingUnitSeq:sProcessingUnitSeq }];            
         let sEventTypeSeq = oTxDataOut.eventType;                                   //Event Type
-        oTxDataOut.eventType = { dataTypeSeq:sEventTypeSeq };
-            
+        oTxDataOut.eventType = { dataTypeSeq:sEventTypeSeq };            
         let sSalesOrderSeq = oTxDataOut.salesOrder;                                 //Sales Order
         oTxDataOut.salesOrder = { salesOrderSeq:sSalesOrderSeq };
                 
@@ -180,15 +182,14 @@ class commController {
         setTimeout(() => {
             console.log('called');
             this.commTxRepeater(oConfig);;
-        }, 20000);        
-        
+        }, 2000);                
     }
 
     async commTxRepeater(oConfig){
-        console.log('commTxRepeater:'+JSON.stringify(oConfig));
-        console.log('commTxRepeater-sLogUUID:'+this.sLogUUID);
+        console.log('commTxRepeater:'+JSON.stringify(oConfig));        
         let sProcessingUnitSeq = oConfig.ProcessingUnitSeq, sQuery, sFromDate, sToDate, aTxData, oTxData, oLogItem;
         let sLogUUID = this.sLogUUID == ''? this.logger.postLogHead(): this.sLogUUID;
+        this.logger.setLogHeadStatus(sLogUUID, constants.LOG_STAT_INPROCESS);
         let aDateList = this.getDatesList(oConfig.OpType, oConfig.FromTime, oConfig.ToTime);
 
         for(let iCnt=0; iCnt<aDateList.length; iCnt++){
@@ -211,18 +212,17 @@ class commController {
                     let oTxResponse = await this.commAPI.createTransaction(oTxData); 
                     let sTxId = oTxResponse.salesOrder.orderId + ':' + oTxResponse.lineNumber.value;
                     oLogItem = this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_SUCCESS, 'Transaction creation is successful - '+sTxId);
-                    for (const client of commController.ws.clients) { client.send(JSON.stringify(oLogItem)); }                                   
+                    //for (const client of commController.ws.clients) { client.send(JSON.stringify(oLogItem)); }                                   
                 } catch (error) {
                     oLogItem = this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_ERROR, error.message, JSON.stringify(error));
-                    for (const client of commController.ws.clients) { client.send(JSON.stringify(oLogItem)); } 
+                    //for (const client of commController.ws.clients) { client.send(JSON.stringify(oLogItem)); } 
                     continue;
                 }
             }
 
         }
-        console.log('Before Mail'+sLogUUID);
+        this.logger.setLogHeadStatus(sLogUUID, constants.LOG_STAT_COMPLETE);
         let oLogInfo = this.logger.getLogCountByUUID(sLogUUID), sSubject, sHtmlBody='';
-        console.log('Mail Reached'+JSON.stringify(oLogInfo));
         sSubject    = 'Status update on your transaction repeater request';
         sHtmlBody   = sHtmlBody + `Hi,<br><br>Please find status on your transaction repeater request below:<br><br>`;
         sHtmlBody   = sHtmlBody + `No of Transaction repeated Successfully: ${oLogInfo.SuccessCount}<br>`;
