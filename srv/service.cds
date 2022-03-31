@@ -5,7 +5,8 @@ using { hxm } from '../db/schema';
 service SPMHubService {
 
     entity BusinessUnits as projection on hxm.BusinessUnits;
-    entity SpmHubRequest as projection on hxm.SpmHubRequest;
+    entity SpmHubRequestLog as projection on hxm.SpmHubRequestLog;
+    entity SpmHubRequestLogItem as projection on hxm.SpmHubRequestLogItem;
 
     function VerifyCredentials() returns String(20);
     function GetUserInfo() returns String;

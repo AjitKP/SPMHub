@@ -14,7 +14,7 @@
 }
 
 .sapUiSizeCompact .sapMBtnIcon {
-    line-height: 2rem;
+    line-height: 1.5rem;
 }
 
 .borderTop{
@@ -33,6 +33,10 @@ border-top: 0.0625rem solid #ccc;
     padding-bottom: 0.625rem !important;
 }
 
+.sapMInputBaseInner {
+    text-align: center;
+}
+
 .sapMPanelContent {
     padding-bottom: 0.625rem !important;
     padding-left:  0.5rem !important;
@@ -45,5 +49,21 @@ border-top: 0.0625rem solid #ccc;
 
 sapUiRespGrid.sapUiRespGridVSpace1>div {
     margin-bottom: 0rem;
+}
+
+.size1 {
+	font-size : 1.5rem;
+}
+.size2 {
+	font-size : 2rem;
+}
+.size3 {
+	font-size : 5rem;
+}
+.size4 {
+	font-size : 7.5rem;
+}
+.size5 {
+	font-size : 10rem;
 }
 

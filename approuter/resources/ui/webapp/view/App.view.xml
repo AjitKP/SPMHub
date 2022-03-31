@@ -1,0 +1,51 @@
+<mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:f="sap.f" xmlns="sap.m" controllerName="hxm.spm.ui.controller.App" xmlns:card="sap.f.cards" xmlns:core="sap.ui.core" xmlns:tnt="sap.tnt" displayBlock="true">
+    <Shell id="shell">
+        <App id="app2">
+            <pages>
+                <tnt:ToolPage>
+                    <tnt:header>
+                        <tnt:ToolHeader design="Info">
+                            <HBox justifyContent="Start" width="25%" height="100%" alignItems="Center">
+                                <Image src="./css/sap_logo.svg" width="48px" class="sapUiSmallMarginEnd"/>
+                                <MenuButton icon="sap-icon://grid" class="sapUiSizeCompact" menuPosition="BeginBottom">
+                                    <menu>
+                                        <Menu>
+                                            <MenuItem icon="sap-icon://home" text="Change Tenant" press="onChangeTenant" />
+                                            <MenuItem icon="sap-icon://add-document" text="New Request" press="onNewRequest" />
+                                        </Menu>
+                                    </menu>
+                                </MenuButton>                                  
+                            </HBox>  
+                            <HBox justifyContent="Center" width="50%" height="100%" alignItems="Center">
+                                <Title text="HXM - SPM Hub" />
+                            </HBox>
+                            <HBox justifyContent="End" width="25%" height="100%" alignItems="Center">
+                                <Title id="idTitleUserName" text="" class="sapUiSmallMarginEnd"/>
+                                <MenuButton icon="sap-icon://palette" class="sapUiSizeCompact" menuPosition="EndBottom">
+                                    <menu>
+                                        <Menu>
+                                            <MenuItem text="Fiori 3" press="onChangeTheme" />
+                                            <MenuItem text="Fiori 3 Dark" press="onChangeTheme" />
+                                            <MenuItem text="Horizon" press="onChangeTheme" />                                        
+                                            <MenuItem text="Belize" press="onChangeTheme" />
+                                            <MenuItem text="Belize Plus" press="onChangeTheme" />
+                                            <MenuItem text="High Contrast White" press="onChangeTheme" />
+                                            <MenuItem text="High Contrast Black" press="onChangeTheme" />
+                                        </Menu>
+                                    </menu>
+                                </MenuButton>   
+                            </HBox>                                                     
+                        </tnt:ToolHeader>
+                    </tnt:header>                
+                    <tnt:mainContents>
+                        <App id="app">
+                            <pages>     
+                           
+                             </pages>
+                        </App>
+                    </tnt:mainContents>
+                </tnt:ToolPage>
+            </pages>
+        </App>
+    </Shell>
+</mvc:View>

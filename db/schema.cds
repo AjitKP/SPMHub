@@ -1,5 +1,5 @@
 namespace hxm;
-using {managed} from '@sap/cds/common';
+using {managed, cuid } from '@sap/cds/common';
 
 entity BusinessUnits {
     //tenantid                :Integer;
@@ -9,10 +9,18 @@ entity BusinessUnits {
     virtual description     :String;
 }
 
-entity SpmHubRequest : managed {
-    @Core.Computed:true
-    requestid : UUID;
-    reqdescr : String(200);
-    effstdate : Date;
-    reqstatus : String(50);
+entity SpmHubRequestLog : cuid, managed {
+    reqtype: String(20);
+    tenantid: String(10);
+    reqstatus : String(20);
+    requser: String(100);
+    reqemail: String(100);
+    reqinput: String;
+}
+
+entity SpmHubRequestLogItem : cuid, managed {
+    loguuid : UUID;
+    itemtype: String(20);
+    itemmessage: String(1024);
+    itemdata : String;
 }

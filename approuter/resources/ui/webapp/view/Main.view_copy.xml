@@ -1,10 +1,39 @@
 <mvc:View xmlns:mvc="sap.ui.core.mvc" xmlns:f="sap.f" xmlns="sap.m" controllerName="hxm.spm.ui.controller.Main" xmlns:card="sap.f.cards" xmlns:core="sap.ui.core" xmlns:tnt="sap.tnt" displayBlock="true">
 
     <Shell id="shell">
-        <App id="app">
+        <App id="app2">
             <pages>
-                <Page id="page" showHeader="false">
-                    <content>
+                <tnt:ToolPage>
+                    <tnt:header>
+                        <tnt:ToolHeader>
+                            <HBox justifyContent="Start" width="25%" height="100%" alignItems="Center">
+                                <Image src="./css/sap_logo.svg" width="48px"/>
+                            </HBox>  
+                            <HBox justifyContent="Center" width="50%" height="100%" alignItems="Center">
+                                <Title text="Welcome to SPM Hub" />
+                            </HBox>
+                            <HBox justifyContent="End" width="25%" height="100%" alignItems="Center">
+                                <Title id="idTitleUserName" text="" />
+                                <MenuButton icon="sap-icon://palette" class="sapUiSizeCompact" menuPosition="EndBottom">
+                                    <menu>
+                                        <Menu>
+                                            <MenuItem text="Fiori 3" press="onChangeTheme" />
+                                            <MenuItem text="Fiori 3 Dark" press="onChangeTheme" />
+                                            <MenuItem text="Horizon" press="onChangeTheme" />                                        
+                                            <MenuItem text="Belize" press="onChangeTheme" />
+                                            <MenuItem text="Belize Plus" press="onChangeTheme" />
+                                            <MenuItem text="High Contrast White" press="onChangeTheme" />
+                                            <MenuItem text="High Contrast Black" press="onChangeTheme" />
+                                        </Menu>
+                                    </menu>
+                                </MenuButton>   
+                            </HBox>                                                     
+                        </tnt:ToolHeader>
+                    </tnt:header>                
+                    <tnt:mainContents>
+                        <App id="app">
+                            <pages>     
+                            <Page showHeader="false">                   
                         <FlexBox height="20%" alignItems="End" justifyContent="Center">
                             <VBox>
                                 <FormattedText htmlText="{user>/HTML}"/>  
@@ -40,14 +69,17 @@
                                 </f:Card>
 
                         </FlexBox>
-                    </content>
+                        </Page>
+                             </pages>
+        </App>
+                    </tnt:mainContents>
                     <!-- <footer>
                         <OverflowToolbar>
                             <ToolbarSpacer />
                             <Button text="" type="Accept" visible="false" />
                         </OverflowToolbar>
                     </footer> -->
-                </Page>
+                </tnt:ToolPage>
 
             </pages>
         </App>

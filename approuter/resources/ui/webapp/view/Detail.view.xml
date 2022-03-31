@@ -2,7 +2,7 @@
     <Shell id="shell">
         <App id="app">
             <pages>      
-                <Page title="Sales Transaction Repeater" titleAlignment="Center" backgroundDesign="Solid" showFooter="true">
+                <Page showHeader="true" showFooter="true">
                 	<headerContent>
 			            <Button icon="sap-icon://home" tooltip="Return to Home" press="onReturnToHome"/>
 		            </headerContent>
@@ -132,7 +132,7 @@
                                     </l:Grid>
                                 </Panel>     
                                 <Panel id="idPanelLogItem" class="zsapUiTinyPadding" visible="false" >
-                                    <Table id="idLogItemTable" inset="false" items="{Log>/LogItems/LogItems}" class="sapUiSizeCompact">
+                                    <Table id="idLogItemTable" inset="false" items="{Log>/LogItems}" class="sapUiSizeCompact">
                                         <headerToolbar>
                                         </headerToolbar>
                                         <columns>
@@ -149,9 +149,9 @@
                                         <items>
                                             <ColumnListItem vAlign="Middle">
                                                 <cells>
-                                                    <tnt:InfoLabel text="{Log>LogItemType}" colorScheme="{=${Log>LogItemType} !== 'ERROR'? 8 : 1 }" />
-                                                    <Text text="{Log>DateTime}" />                                                    
-                                                    <Text text="{Log>LogItemMessage}"/>
+                                                    <tnt:InfoLabel text="{Log>itemtype}" colorScheme="{=${Log>itemtype} !== 'ERROR'? 8 : 1 }" />
+                                                    <Text text="{Log>createdAt}" />                                                    
+                                                    <Text text="{Log>itemmessage}"/>
                                                 </cells>
                                             </ColumnListItem>
                                         </items>

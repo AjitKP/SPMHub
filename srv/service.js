@@ -2,7 +2,7 @@ const cds = require("@sap/cds");
 const commController = require('./controller');
 module.exports = cds.service.impl(async function () {
 
-    const { BusinessUnits } = this.entities;
+    const { BusinessUnits, SpmHubRequest } = this.entities;
     
     this.fnInstantiateCommService = (req, sReqType)=>{
         const sUrl=req.headers["tenant"], sUser=req.headers["user"], sPassword=req.headers["pass"], sReqUser=req.headers["requser"], sReqEmail=req.headers["reqemail"];
@@ -40,17 +40,18 @@ module.exports = cds.service.impl(async function () {
     this.on('GetAllTxRepeaters',async(req)=>{
         console.log("reached GetAllTxRepeaters")
         const commSrv = this.fnInstantiateCommService(req, 'AllTxRepeaters');
-        return commSrv.getAllTxRepeaterRequestsByTenantId();
+        const sOutput = await commSrv.getAllTxRepeaterRequestsByTenantId();
+        console.log('GetAllTxRepeaters'+sOutput);
+        return sOutput;
     })      
 
     this.on('GetLogsByUUID',async(req)=>{
         console.log("reached GetLogsByUUID")
         const commSrv = this.fnInstantiateCommService(req, 'AllLogs');
-        return commSrv.getLogsByUUID(req.data.LogUUID);
+        return await commSrv.getLogsByUUID(req.data.LogUUID);
     })        
 
     this.on('TransactionRepeater', async(req)=>{
-        console.log(JSON.stringify(process.env));
         console.log("reached TransactionRepeater")
         const commSrv = this.fnInstantiateCommService(req, req.data.OpType);
         const sLogId  = await commSrv.createLogHead(req.data);

@@ -88,7 +88,7 @@
       "routes": [
         {
           "name": "RouteMain",
-          "pattern": "RouteMain",
+          "pattern": "",
           "target": [
             "TargetMain"
           ]
@@ -106,14 +106,7 @@
             "target": [
               "TargetDetail"
             ]
-        },
-        {
-            "name": "RouteDetailLog",
-            "pattern": "RouteDetailLog/{LogUUID}",
-            "target": [
-              "TargetDetailLog"
-            ]
-        }                
+        }               
       ],
       "targets": {
         "TargetTxRSummary": {
@@ -136,21 +129,14 @@
             "clearControlAggregation": false,
             "viewId": "Detail",
             "viewName": "Detail"
-        },
-        "TargetDetailLog": {
-            "viewType": "XML",
-            "transition": "slide",
-            "clearControlAggregation": false,
-            "viewId": "DetailLog",
-            "viewName": "DetailLog"
-        }         
+        }        
       }
     },
     "rootView": {
-      "viewName": "hxm.spm.ui.view.Main",
+      "viewName": "hxm.spm.ui.view.App",
       "type": "XML",
       "async": true,
-      "id": "Main"
+      "id": "App"
     }
   }
 }

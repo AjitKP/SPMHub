@@ -4,6 +4,7 @@ const constants = require('./constants');
 const logger    = require('./logger');
 const mailer    = require('./mailer');
 const WebSocketServer = require('ws').Server;
+const cds = require('@sap/cds')
 
 class commController {
 
@@ -22,8 +23,12 @@ class commController {
 
     constructor(sTenantId, sUserName, sPassword, sReqType, sReqUser, sReqEmail){
         sReqType == undefined ? sReqType = 'Credentials' : sReqType = sReqType;
-        this.commAPI = new commapi(sTenantId, sUserName, sPassword);
-        this.logger  = new logger(sTenantId, sReqType, sReqUser, sReqEmail);     
+        this.commAPI    = new commapi(sTenantId, sUserName, sPassword);
+        this.logger     = new logger(sTenantId, sReqType, sReqUser, sReqEmail);
+        this.TenantId   = sTenantId; 
+        this.ReqType    = sReqType;
+        this.ReqUser    = sReqUser;
+        this.ReqEmail   = sReqEmail;
         // commController.ws.on('connection', function (socket) {
         //     socket.send('Hi, this is the Echo-Server');
         //     socket.on('message', function (message) {
@@ -34,7 +39,7 @@ class commController {
     }    
     
     async createLogHead(oInput){
-        this.sLogUUID = this.logger.postLogHead(oInput);
+        this.sLogUUID = await this.logger.postLogHead(oInput);
         console.log("createLogHead"+this.sLogUUID);
         return this.sLogUUID;
     }
@@ -44,11 +49,13 @@ class commController {
     }
 
     async getLogsByUUID(sLogUUID){
-        return JSON.stringify(this.logger.getLogsByUUID(sLogUUID));
+        return JSON.stringify(await this.logger.getLogsByUUID(sLogUUID));
     }    
 
     async getAllTxRepeaterRequestsByTenantId(){
-        return JSON.stringify(this.logger.getAllTxRepeaterRequestsByTenantId());
+        let sOutput = JSON.stringify(await this.logger.getAllTxRepeaterRequestsByTenantId());
+        console.log('getAllTxRepeaterRequestsByTenantId'+sOutput);
+        return sOutput;
     }        
     
     async verifyCommCredentials(){
@@ -186,10 +193,10 @@ class commController {
     }
 
     async commTxRepeater(oConfig){
-        console.log('commTxRepeater:'+JSON.stringify(oConfig));        
+        console.log('commTxRepeater:'+JSON.stringify(oConfig)+this.sLogUUID);        
         let sProcessingUnitSeq = oConfig.ProcessingUnitSeq, sQuery, sFromDate, sToDate, aTxData, oTxData, oLogItem;
-        let sLogUUID = this.sLogUUID == ''? this.logger.postLogHead(): this.sLogUUID;
-        this.logger.setLogHeadStatus(sLogUUID, constants.LOG_STAT_INPROCESS);
+        let sLogUUID = this.sLogUUID == ''? await this.logger.postLogHead(): this.sLogUUID;
+        await this.logger.setLogHeadStatus(sLogUUID, constants.LOG_STAT_INPROCESS);
         let aDateList = this.getDatesList(oConfig.OpType, oConfig.FromTime, oConfig.ToTime);
 
         for(let iCnt=0; iCnt<aDateList.length; iCnt++){
@@ -198,7 +205,7 @@ class commController {
             sQuery =  this.prepareTxQuery(sFromDate, sProcessingUnitSeq);
 
             aTxData = await this.commAPI.getTxByQuery(sQuery);
-            aTxData.length <= 0 ? this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_WARNING, 'No transaction found for date: '+sFromDate) : this.logger.postLogItem(sLogUUID, 'Information', aTxData.length+' transactions found for date: '+sFromDate);
+            aTxData.length <= 0 ? await this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_WARNING, 'No transaction found for date: '+sFromDate) : await this.logger.postLogItem(sLogUUID, 'Information', aTxData.length+' transactions found for date: '+sFromDate);
      
             for(let i=0; i<aTxData.length; i++){    
                 oTxData = JSON.parse(JSON.stringify(aTxData[i]));
@@ -211,18 +218,18 @@ class commController {
                 try {
                     let oTxResponse = await this.commAPI.createTransaction(oTxData); 
                     let sTxId = oTxResponse.salesOrder.orderId + ':' + oTxResponse.lineNumber.value;
-                    oLogItem = this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_SUCCESS, 'Transaction creation is successful - '+sTxId);
+                    oLogItem = await this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_SUCCESS, 'Transaction creation is successful - '+sTxId);
                     //for (const client of commController.ws.clients) { client.send(JSON.stringify(oLogItem)); }                                   
                 } catch (error) {
-                    oLogItem = this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_ERROR, error.message, JSON.stringify(error));
+                    oLogItem = await this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_ERROR, error.message, JSON.stringify(error));
                     //for (const client of commController.ws.clients) { client.send(JSON.stringify(oLogItem)); } 
                     continue;
                 }
             }
 
         }
-        this.logger.setLogHeadStatus(sLogUUID, constants.LOG_STAT_COMPLETE);
-        let oLogInfo = this.logger.getLogCountByUUID(sLogUUID), sSubject, sHtmlBody='';
+        await this.logger.setLogHeadStatus(sLogUUID, constants.LOG_STAT_COMPLETE);
+        let oLogInfo = await this.logger.getLogCountByUUID(sLogUUID), sSubject, sHtmlBody='';
         sSubject    = 'Status update on your transaction repeater request';
         sHtmlBody   = sHtmlBody + `Hi,<br><br>Please find status on your transaction repeater request below:<br><br>`;
         sHtmlBody   = sHtmlBody + `No of Transaction repeated Successfully: ${oLogInfo.SuccessCount}<br>`;

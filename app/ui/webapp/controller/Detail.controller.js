@@ -33,14 +33,14 @@ sap.ui.define([
                         oLog = JSON.parse(oData.GetLogsByUUID);   
                         this.getView().byId("idPanelLogHead").setVisible(true);
                         this.getView().byId("idPanelLogItem").setVisible(true);
-                        this.getView().byId("idInputReqCreateOn").setText(oLog.LogHead.CDateTime.replaceAll('T', ' '));
-                        this.getView().byId("idInputReqUpdateOn").setText(oLog.LogHead.UDateTime.replaceAll('T', ' '));
-                        this.getView().byId("idInputReqUser").setText(oLog.LogHead.ReqUser);
-                        this.getView().byId("idInputReqStatus").setText(oLog.LogHead.ReqStatus);
+                        this.getView().byId("idInputReqCreateOn").setText(oLog.LogHead.modifiedAt.replaceAll('T', ' ').substring(0,19));
+                        this.getView().byId("idInputReqUpdateOn").setText(oLog.LogHead.createdAt.replaceAll('T', ' ').substring(0,19));
+                        this.getView().byId("idInputReqUser").setText(oLog.LogHead.requser);
+                        this.getView().byId("idInputReqStatus").setText(oLog.LogHead.reqstatus);
                         var oJSONModel = new JSONModel(oLog);
                         this.getView().setModel(oJSONModel, "Log");
                         this.getView().getModel("Log").refresh();
-                        if(oLog.LogHead.ReqStatus != "Complete"){
+                        if(oLog.LogHead.reqstatus != "Complete"){
                             setTimeout(this.getLog(this.getView()), 5000);              
                         }                        
                     }).bind(this),
