@@ -67,8 +67,6 @@ sap.ui.define([
             },
 
             onContinueLogin: function(){
-                // eslint-disable-next-line no-unused-vars
-                //var bSuccessfullLogin = false;
                 const sTenant   = this.getView().byId("idTenantInput").getValue();
                 const sUser     = this.getView().byId("idUserInput").getValue();
                 const sPass     = this.getView().byId("idPasswordInput").getValue();

@@ -49,6 +49,8 @@ sap.ui.define([
                 return oUIConfigData;
             },     
             _onRouteMatched : function (oEvent) {
+                this.getOwnerComponent().getModel("appheader").setData({EnableMenu:true, ChangeTenant:true, NewRequest:true});
+                this.getOwnerComponent().getModel("appheader").refresh();
                 var oView = this.getView(), oModel, oJSONModel, sLogUUID, oUIConfigData, oHeaders;
                 sLogUUID = oEvent.getParameter("arguments").LogUUID; 
                 if(sLogUUID == "" || sLogUUID == undefined || sLogUUID == "Create"){
@@ -142,12 +144,6 @@ sap.ui.define([
                         oUIConfigData.idPanelLogHead.idInputReqUpdateOn.text = oLog.LogHead.createdAt.replaceAll('T', ' ').substring(0,19);
                         oUIConfigData.idPanelLogHead.idInputReqUser.text = oLog.LogHead.requser;
                         oUIConfigData.idPanelLogHead.idInputReqStatus.text = oLog.LogHead.reqstatus;
-                        // this.getView().byId("idPanelLogHead").setVisible(true);
-                        // this.getView().byId("idPanelLogItem").setVisible(true);
-                        // this.getView().byId("idInputReqCreateOn").setText(oLog.LogHead.modifiedAt.replaceAll('T', ' ').substring(0,19));
-                        // this.getView().byId("idInputReqUpdateOn").setText(oLog.LogHead.createdAt.replaceAll('T', ' ').substring(0,19));
-                        // this.getView().byId("idInputReqUser").setText(oLog.LogHead.requser);
-                        // this.getView().byId("idInputReqStatus").setText(oLog.LogHead.reqstatus);
                         oJSONModel = new JSONModel(oUIConfigData);
                         this.getView().setModel(oJSONModel, "DetailUI");
                         this.getView().getModel("DetailUI").refresh();

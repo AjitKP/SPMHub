@@ -7,11 +7,11 @@
                         <tnt:ToolHeader design="Info">
                             <HBox justifyContent="Start" width="25%" height="100%" alignItems="Center">
                                 <Image src="./css/sap_logo.svg" width="48px" class="sapUiSmallMarginEnd"/>
-                                <MenuButton icon="sap-icon://grid" class="sapUiSizeCompact" menuPosition="BeginBottom">
+                                <MenuButton icon="sap-icon://grid" class="sapUiSizeCompact" menuPosition="BeginBottom" visible="{appheader>/EnableMenu}">
                                     <menu>
                                         <Menu>
-                                            <MenuItem icon="sap-icon://home" text="Change Tenant" press="onChangeTenant" />
-                                            <MenuItem icon="sap-icon://add-document" text="New Request" press="onNewRequest" />
+                                            <MenuItem icon="sap-icon://home" text="Change Tenant" press="onChangeTenant" visible="{appheader>/ChangeTenant}"/>
+                                            <MenuItem icon="sap-icon://add-document" text="New Request" press="onNewRequest" visible="{appheader>/NewRequest}" />
                                         </Menu>
                                     </menu>
                                 </MenuButton>                                  

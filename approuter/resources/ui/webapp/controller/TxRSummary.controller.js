@@ -17,9 +17,11 @@ sap.ui.define([
             onInit: function () {
                 this.getView().byId("idSummaryCardHeader").setTitle("Logged In Tenant : "+this.getOwnerComponent().getModel().getHeaders()["tenant"]);
                 var oRouter = this.getOwnerComponent().getRouter();
-                oRouter.getRoute("RouteTxRSummary").attachMatched(this._onRouteMatched, this);                      
+                oRouter.getRoute("RouteTxRSummary").attachMatched(this._onRouteMatched, this);                                      
             },     
             _onRouteMatched : function (oEvent) {
+                this.getOwnerComponent().getModel("appheader").setData({EnableMenu:true, ChangeTenant:true, NewRequest:false});
+                this.getOwnerComponent().getModel("appheader").refresh();
                 var oModel = this.getView().getModel();  
                 if(oModel == undefined){oModel = this.getOwnerComponent().getModel();}
                 oModel.read("/GetAllTxRepeaters()", {
@@ -90,46 +92,7 @@ sap.ui.define([
                 var sLogUUID    = this.getView().getModel("TxRLog").getData().LogHead[iLogIndex].ID;
                 this.getOwnerComponent().getRouter().navTo("RouteDetail",{LogUUID:sLogUUID});
             },
-            onAfterRendering: function(){
-                // var oModel = this.getView().getModel();  
-                // if(oModel == undefined){oModel = this.getOwnerComponent().getModel();}
-                // oModel.read("/GetAllTxRepeaters()", {
-                //     // eslint-disable-next-line no-undef
-                //     success: jQuery.proxy(function (oData) {
-                //         console.log(oData);   
-                //         var oAllLogList     = JSON.parse(oData.GetAllTxRepeaters), oStatusCount={SubmittedCnt:0, InProcessCnt:0,CompletedCnt:0};
-                //         for(let i=0; i<oAllLogList.LogHead.length; i++){
-                //             oAllLogList.LogHead[i].reqinput = JSON.parse(oAllLogList.LogHead[i].reqinput);
-                //             switch (oAllLogList.LogHead[i].reqtype) {
-                //                 case 'D2D':
-                //                     oAllLogList.LogHead[i].reqtypedesc = 'Day to Day'; break;  
-                //                 case 'M2M':
-                //                     oAllLogList.LogHead[i].reqtypedesc = 'Month to Month'; break;  
-                //                 case 'Y2Y':
-                //                     oAllLogList.LogHead[i].reqtypedesc = 'Year to Year'; break;                            
-                //             }
-                //             switch (oAllLogList.LogHead[i].reqstatus) {
-                //                 case 'Submitted':
-                //                     oStatusCount.SubmittedCnt = oStatusCount.SubmittedCnt + 1; break;  
-                //                 case 'In Process':
-                //                     oStatusCount.InProcessCnt = oStatusCount.InProcessCnt + 1; break;  
-                //                 case 'Complete':
-                //                     oStatusCount.CompletedCnt = oStatusCount.CompletedCnt + 1; break;                            
-                //             }                            
-                //         }   
-                //         oAllLogList.TotalLogHeadCount = oAllLogList.LogHead.length;
-                //         oAllLogList.StatusCount = oStatusCount;
-                //         var oJSONModel      = new JSONModel(oAllLogList);
-                //         this.getView().setModel(oJSONModel, "TxRLog");
-                //         this.getView().getModel("TxRLog").refresh();                       
-                //     }).bind(this),
-                //     // eslint-disable-next-line no-undef
-                //     error: jQuery.proxy(function (oError) {
-                //         console.log(oError);
-                //         var msg = "Technical error occurred while getting transaction summary logs. Please reach out to adiministrator."
-                //         MessageBox.error(msg, {styleClass: "sapUiSizeCompact"});
-                //     })
-                // });                 
+            onAfterRendering: function(){                
             },
 
             onRequestSubmit: function(oEvent){
