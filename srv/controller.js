@@ -18,8 +18,6 @@ class commController {
     sDays           = constants.TIME_DAYS; 
     sMonths         = constants.TIME_MONTHS;
     sLogUUID        = '';
-    // static ws = new WebSocketServer({ port: 8081 });
-
 
     constructor(sTenantId, sUserName, sPassword, sReqType, sReqUser, sReqEmail){
         sReqType == undefined ? sReqType = 'Credentials' : sReqType = sReqType;
@@ -28,14 +26,7 @@ class commController {
         this.TenantId   = sTenantId; 
         this.ReqType    = sReqType;
         this.ReqUser    = sReqUser;
-        this.ReqEmail   = sReqEmail;
-        // commController.ws.on('connection', function (socket) {
-        //     socket.send('Hi, this is the Echo-Server');
-        //     socket.on('message', function (message) {
-        //       console.log('Received Message: ' +  message);
-        //       socket.send('Echo: ' + message);
-        //     });
-        //   });                      
+        this.ReqEmail   = sReqEmail;                  
     }    
     
     async createLogHead(oInput){
@@ -89,7 +80,7 @@ class commController {
                         let mDate = moment(sDate, this.sDateFormat);
                         let mFrom = moment(sFrom, this.sDateFormat);
                         let mTo   = moment(sTo, this.sDateFormat);
-                        sDate != sFrom ? oTxDataOut[sFieldKey] = mTo.subtract(mDate.diff(mFrom, this.sDays), this.sDays).format(this.sDateFormat) : oTxDataOut[sFieldKey] = sTo;            
+                        sDate != sFrom ? oTxDataOut[sFieldKey] = mTo.subtract(mFrom.diff(mDate, this.sDays), this.sDays).format(this.sDateFormat) : oTxDataOut[sFieldKey] = sTo;            
                     } 
                 });                    
                 break;
@@ -140,9 +131,11 @@ class commController {
         return aDateList;
     }
 
-    putTxLine(oTxDataIn, sText){
-        let oTxDataOut = JSON.parse(JSON.stringify(oTxDataIn));
-        oTxDataOut.lineNumber.value = parseInt(oTxDataOut.lineNumber.value.toString() + sText.replace(/-/g, '').toString());
+    putTxLine(oTxDataIn, sText, iIndex){
+        let oTxDataOut = JSON.parse(JSON.stringify(oTxDataIn)), iSubLineValue;
+        oTxDataOut.lineNumber.value = parseInt(sText.replace(/-/g, '').toString());
+        iSubLineValue = iIndex % 2 == 0 ? parseInt(oTxDataOut.subLineNumber.value) - 2 : parseInt(oTxDataOut.subLineNumber.value) - 3;
+        oTxDataOut.subLineNumber.value =  iSubLineValue < 0 ? 100 : iSubLineValue;
         return oTxDataOut;
     }    
 
@@ -212,7 +205,7 @@ class commController {
                 if(oTxData.value.unitType.name != oConfig.Currency){continue;}      
                 
                 oTxData = this.putTxDateFields(this.sDateToDate, oTxData, sFromDate, sToDate);
-                oTxData = this.putTxLine(oTxData, sToDate);
+                oTxData = this.putTxLine(oTxData, sToDate, i);
                 oTxData = this.deleteTxFields(oTxData);
                 oTxData = this.changeTxFields(oTxData);
                 try {

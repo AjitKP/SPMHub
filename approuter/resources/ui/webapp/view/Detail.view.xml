@@ -12,7 +12,7 @@
                                 <OverflowToolbar height="60px">                                    
                                     <HBox justifyContent="Center" width="100%" alignItems="Center" class="sapUiSmallMargin" >
                                         <Label text="Choose TX Repeater Option" labelFor="SBtn1" class="sapUiSmallMarginBeginEnd"/>
-                                        <SegmentedButton id="SBtn1" selectedKey="Y2Y" width="100%" class="zSegmentedButton" selectionChange="onSBSelectionChange">
+                                        <SegmentedButton id="SBtn1" selectedKey="{DetailUI>/SBtn1/selectedKey}" enabled="{DetailUI>/SBtn1/enabled}" width="100%" class="zSegmentedButton" selectionChange="onSBSelectionChange">
                                             <items>
                                                 <SegmentedButtonItem text="Year to Year" key="Y2Y" icon="sap-icon://calendar" />
                                                 <SegmentedButtonItem text="Month to Month" key="M2M" icon="sap-icon://legend" />
@@ -21,117 +21,117 @@
                                         </SegmentedButton>
                                     </HBox>
                                 </OverflowToolbar>
-                            </headerToolbar>   
+                            </headerToolbar>    
                             <content>                           
-                                <Panel id="PY2Y" class="zsapUiTinyPadding" backgroundDesign="Solid" height="100%">       
+                                <Panel id="PY2Y" class="zsapUiTinyPadding" backgroundDesign="Solid" height="100%" visible="{DetailUI>/PY2Y/visible}">       
                                     <l:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBeginEnd">
                                         <HBox alignItems="Center" justifyContent="Start">
                                             <Label text="Business Unit" labelFor="SBUY1" class="sapUiSmallMarginBeginEnd"/>
-                                            <Select	id="idSBUY1" forceSelection="false" items="{path: '/BusinessUnits', sorter: { path: 'name' }}">
+                                            <Select	id="idSBUY1" forceSelection="false" items="{path: '/BusinessUnits', sorter: { path: 'name' }}" editable="{DetailUI>/PY2Y/idSBUY1/editable}" selectedKey="{DetailUI>/PY2Y/idSBUY1/selectedKey}">
 					                            <core:Item key="{processingUnit}" text="{name}" />
 				                            </Select>  
                                         </HBox>                                          
                                         <HBox alignItems="Center" justifyContent="Start">
                                             <Label text="From Year" labelFor="DPY1" class="sapUiSmallMarginBeginEnd"/>
-                                            <DatePicker id="idDPY1" displayFormat="yyyy" valueFormat="yyyy" change="handleChange"/>    
+                                            <DatePicker id="idDPY1" displayFormat="yyyy" valueFormat="yyyy" change="handleChange" editable="{DetailUI>/PY2Y/idDPY1/editable}" value="{DetailUI>/PY2Y/idDPY1/value}"/>    
                                         </HBox>      
                                         <HBox alignItems="Center" justifyContent="Start">                                                                                      
                                             <Label text="To Year" labelFor="DPY2" class="sapUiSmallMarginBeginEnd"/>
-                                            <DatePicker id="idDPY2" displayFormat="yyyy" valueFormat="yyyy" change="handleChange"/>  
+                                            <DatePicker id="idDPY2" displayFormat="yyyy" valueFormat="yyyy" change="handleChange" editable="{DetailUI>/PY2Y/idDPY2/editable}" value="{DetailUI>/PY2Y/idDPY2/value}"/>  
                                         </HBox>  
                                         <HBox alignItems="Center" justifyContent="Start">                                                                                      
                                             <Label text="Currency" labelFor="SY3" class="sapUiSmallMarginBeginEnd"/>
-                                            <Select	id="idSY3" forceSelection="false" width="150px"	>
+                                            <Select	id="idSY3" forceSelection="false" width="150px"	editable="{DetailUI>/PY2Y/idSY3/editable}" selectedKey="{DetailUI>/PY2Y/idSY3/selectedKey}">
                                                 <core:Item key="USD" text="USD" />
                                                 <core:Item key="EUR" text="EUR" />
                                             </Select>  
                                         </HBox>       
                                     </l:Grid>      
                                     <HBox alignItems="Center" justifyContent="End" class="zsapUiTinyPadding sapUiLargeMarginBeginEnd">
-                                        <Button id="idBtnYSubmit" text="Submit" type="Accept" width="100px" icon="sap-icon://begin" press="onRequestSubmit"/>                                        
+                                        <Button id="idBtnYSubmit" text="Submit" type="Accept" width="100px" icon="sap-icon://begin" press="onRequestSubmit" visible="{DetailUI>/PY2Y/idBtnYSubmit/visible}"/>                                        
                                     </HBox>                                                                                        
                                 </Panel>
-                                <Panel id="PM2M" class="zsapUiTinyPadding" backgroundDesign="Solid" height="100%" visible="false">       
+                                <Panel id="PM2M" class="zsapUiTinyPadding" backgroundDesign="Solid" height="100%" visible="{DetailUI>/PM2M/visible}">       
                                     <l:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBeginEnd">
                                         <HBox alignItems="Center" justifyContent="Start">
                                             <Label text="Business Unit" labelFor="SBUM1" class="sapUiSmallMarginBeginEnd"/>
-                                            <Select id="idSBUM1"	forceSelection="false" items="{path: '/BusinessUnits', sorter: { path: 'name' }}">
+                                            <Select id="idSBUM1"	forceSelection="false" items="{path: '/BusinessUnits', sorter: { path: 'name' }}" editable="{DetailUI>/PM2M/idSBUY1/editable}" selectedKey="{DetailUI>/PM2M/idSBUM1/selectedKey}">
 					                            <core:Item key="{processingUnit}" text="{name}" />
 				                            </Select>  
                                         </HBox>  
                                         <HBox alignItems="Center" justifyContent="Start">
                                             <Label text="From Month" labelFor="DPM1" class="sapUiSmallMarginBeginEnd"/>
-                                            <DatePicker id="idDPM1" displayFormat="MM-yyyy" valueFormat="yyyy-MM" change="handleChange"/>    
+                                            <DatePicker id="idDPM1" displayFormat="MM-yyyy" valueFormat="yyyy-MM" change="handleChange" editable="{DetailUI>/PM2M/idDPM1/editable}" value="{DetailUI>/PM2M/idDPM1/value}"/>    
                                         </HBox>                                                                                    
                                         <HBox alignItems="Center" justifyContent="Start">                                                                                      
                                             <Label text="To Month" labelFor="DPM2" class="sapUiSmallMarginBeginEnd"/>
-                                            <DatePicker id="idDPM2" displayFormat="MM-yyyy" valueFormat="yyyy-MM" change="handleChange"/>  
+                                            <DatePicker id="idDPM2" displayFormat="MM-yyyy" valueFormat="yyyy-MM" change="handleChange" editable="{DetailUI>/PM2M/idDPM2/editable}" value="{DetailUI>/PM2M/idDPM2/value}"/>  
                                         </HBox>  
                                         <HBox alignItems="Center" justifyContent="Start">                                                                                      
                                             <Label text="Currency" labelFor="SM3" class="sapUiSmallMarginBeginEnd"/>
-                                            <Select	id="idSM3" forceSelection="false" width="150px"	>
+                                            <Select	id="idSM3" forceSelection="false" width="150px"	editable="{DetailUI>/PM2M/idSM3/editable}" selectedKey="{DetailUI>/PM2M/idSM3/selectedKey}">
                                                 <core:Item key="USD" text="USD" />
                                                 <core:Item key="EUR" text="EUR" />
                                             </Select>  
                                         </HBox>                                                                                                                            
                                     </l:Grid> 
                                     <HBox alignItems="Center" justifyContent="End" class="zsapUiTinyPadding sapUiLargeMarginBeginEnd">
-                                        <Button id="idBtnMSubmit" text="Submit" type="Accept" width="100px" icon="sap-icon://begin" press="onRequestSubmit"/>                                        
+                                        <Button id="idBtnMSubmit" text="Submit" type="Accept" width="100px" icon="sap-icon://begin" press="onRequestSubmit" visible="{DetailUI>/PM2M/idBtnMSubmit/visible}"/>                                        
                                     </HBox>                                                                                                 
                                 </Panel>      
-                                <Panel id="PD2D" class="zsapUiTinyPadding" backgroundDesign="Solid" height="100%" visible="false">       
+                                <Panel id="PD2D" class="zsapUiTinyPadding" backgroundDesign="Solid" height="100%" visible="{DetailUI>/PD2D/visible}">       
                                     <l:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBeginEnd">
                                         <HBox alignItems="Center" justifyContent="Start">
                                             <Label text="Business Unit" labelFor="SBUD1" class="sapUiSmallMarginBeginEnd"/>
-                                            <Select id="idSBUD1"	forceSelection="false" items="{path: '/BusinessUnits', sorter: { path: 'name' }}">
+                                            <Select id="idSBUD1"	forceSelection="false" items="{path: '/BusinessUnits', sorter: { path: 'name' }}" editable="{DetailUI>/PD2D/idSBUD1/editable}" selectedKey="{DetailUI>/PD2D/idSBUD1/selectedKey}">
 					                            <core:Item key="{processingUnit}" text="{name}" />
 				                            </Select>  
                                         </HBox>  
                                         <HBox alignItems="Center" justifyContent="Start">
                                             <Label text="From Date" labelFor="DPD1"  class="sapUiSmallMarginBeginEnd"/>
-                                            <DatePicker id="idDPD1" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd" change="handleChange"/>    
+                                            <DatePicker id="idDPD1" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd" change="handleChange" editable="{DetailUI>/PD2D/idDPD1/editable}" value="{DetailUI>/PD2D/idDPD1/value}"/>    
                                         </HBox>                                                                                    
                                         <HBox alignItems="Center" justifyContent="Start">                                                                                      
                                             <Label text="To Date" labelFor="DPD2"  class="sapUiSmallMarginBeginEnd"/>
-                                            <DatePicker id="idDPD2" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd" change="handleChange"/>  
+                                            <DatePicker id="idDPD2" displayFormat="dd-MM-yyyy" valueFormat="yyyy-MM-dd" change="handleChange" editable="{DetailUI>/PD2D/idDPD2/editable}" value="{DetailUI>/PD2D/idDPD2/value}"/>  
                                         </HBox>  
                                         <HBox alignItems="Center" justifyContent="Start">                                                                                      
                                             <Label text="Currency" labelFor="SD3" class="sapUiSmallMarginBeginEnd"/>
-                                            <Select	id="idSD3" forceSelection="false" width="150px"	>
+                                            <Select	id="idSD3" forceSelection="false" width="150px" editable="{DetailUI>/PD2D/idSD3/editable}" selectedKey="{DetailUI>/PD2D/idSD3/selectedKey}"	>
                                                 <core:Item key="USD" text="USD" />
                                                 <core:Item key="EUR" text="EUR" />
                                             </Select>  
                                         </HBox>                                                                                                                            
                                     </l:Grid> 
                                     <HBox alignItems="Center" justifyContent="End" class="zsapUiTinyPadding sapUiLargeMarginBeginEnd">
-                                        <Button id="idBtnDSubmit" text="Submit" type="Accept" width="100px" icon="sap-icon://begin" press="onRequestSubmit"/>                                        
+                                        <Button id="idBtnDSubmit" text="Submit" type="Accept" width="100px" icon="sap-icon://begin" press="onRequestSubmit" visible="{DetailUI>/PD2D/idBtnDSubmit/visible}"/>                                        
                                     </HBox>                                                                                                
                                 </Panel>
-                                <Panel id="idPanelLogHead" class="zsapUiTinyPadding" backgroundDesign="Solid" visible="false">
+                                <Panel id="idPanelLogHead" class="zsapUiTinyPadding" backgroundDesign="Solid" visible="{DetailUI>/idPanelLogHead/visible}">
                                     <l:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBeginEnd">
                                         <HBox alignItems="Center" justifyContent="Start">
                                             <Label text="Created On" labelFor="idInputReqCreateOn" class="sapUiSmallMarginBeginEnd"/>
-                                            <Title id="idInputReqCreateOn" level="H6" text=""/>
+                                            <Title id="idInputReqCreateOn" level="H6" text="{DetailUI>/idPanelLogHead/idInputReqCreateOn/text}"/>
 			                                <!-- <Input id="idInputReqCreateOn" type="Text" editable="false"	/>  -->
                                         </HBox>                                          
                                         <HBox alignItems="Center" justifyContent="Start">
                                             <Label text="Requested By" labelFor="idInputReqUser" class="sapUiSmallMarginBeginEnd"/>
-                                            <Title id="idInputReqUser" level="H6" text=""/>
+                                            <Title id="idInputReqUser" level="H6" text="{DetailUI>/idPanelLogHead/idInputReqUser/text}"/>
 			                                <!-- <Input id="idInputReqUser" type="Text" editable="false"	/>  -->
                                         </HBox>      
                                         <HBox alignItems="Center" justifyContent="Start">
                                             <Label text="Request Status" labelFor="idInputReqStatus" class="sapUiSmallMarginBeginEnd"/>
-                                            <Title id="idInputReqStatus" level="H6" text=""/>
+                                            <Title id="idInputReqStatus" level="H6" text="{DetailUI>/idPanelLogHead/idInputReqStatus/text}"/>
 			                                <!-- <Input id="idInputReqStatus" type="Text" editable="false"	/>  -->
                                         </HBox>   
                                         <HBox alignItems="Center" justifyContent="Start">
                                             <Label text="Last Updated" labelFor="idInputReqStatus" class="sapUiSmallMarginBeginEnd"/>
-                                            <Title id="idInputReqUpdateOn" level="H6" text=""/>
+                                            <Title id="idInputReqUpdateOn" level="H6" text="{DetailUI>/idPanelLogHead/idInputReqUpdateOn/text}"/>
 			                                <!-- <Input id="idInputReqUpdateOn" type="Text" editable="false"	/>  -->
                                         </HBox>     
                                     </l:Grid>
                                 </Panel>     
-                                <Panel id="idPanelLogItem" class="zsapUiTinyPadding" visible="false" >
+                                <Panel id="idPanelLogItem" class="zsapUiTinyPadding" visible="{DetailUI>/idPanelLogItem/visible}" >
                                     <Table id="idLogItemTable" inset="false" items="{Log>/LogItems}" class="sapUiSizeCompact">
                                         <headerToolbar>
                                         </headerToolbar>

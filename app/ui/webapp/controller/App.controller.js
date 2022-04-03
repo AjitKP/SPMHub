@@ -46,6 +46,9 @@ sap.ui.define([
                 this.getOwnerComponent().getRouter().navTo("RouteTxRSummary");
             },
 
+            onAfterRendering: function(){
+            },            
+
             onChangeTheme: function(oEvent){
                 var value = oEvent.getSource().getText();
                 switch (value) {

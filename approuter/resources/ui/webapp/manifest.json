@@ -102,7 +102,7 @@
           },        
         {
             "name": "RouteDetail",
-            "pattern": "RouteDetail",
+            "pattern": "RouteDetail/{LogUUID}",
             "target": [
               "TargetDetail"
             ]

@@ -29,6 +29,11 @@ border-top: 0.0625rem solid #ccc;
     padding-left: 0.5rem !important;
     padding-right: 0.5rem !important;
 }
+
+.zsapUiNoPadding {
+    padding: 0px !important;
+}
+
 .zsapUiTinyPadding sapMPanelContent {
     padding-bottom: 0.625rem !important;
 }
@@ -67,3 +72,25 @@ sapUiRespGrid.sapUiRespGridVSpace1>div {
 	font-size : 10rem;
 }
 
+.sapSuiteStackedMC.sapSuiteStackedMCSizeL {
+    width: 13rem !important;
+    height: 3.25rem !important;
+}
+
+.sapSuiteStackedMC .sapSuiteStackedMCBar{
+    height: 1.5rem !important;
+}
+
+.sapMGenericTag .sapMGenericTagWrap {
+    width: 13rem !important;
+}
+
+.sapSuiteStackedMCBarLabel{
+    line-height: 1.5rem !important;
+}
+
+.sapMListTblRow.sapMListTblRowMiddle>td {
+    vertical-align: middle;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+}
