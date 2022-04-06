@@ -31,7 +31,7 @@ class commController {
     
     async createLogHead(oInput){
         this.sLogUUID = await this.logger.postLogHead(oInput);
-        console.log("createLogHead"+this.sLogUUID);
+        //console.log("createLogHead"+this.sLogUUID);
         return this.sLogUUID;
     }
     
@@ -45,7 +45,7 @@ class commController {
 
     async getAllTxRepeaterRequestsByTenantId(){
         let sOutput = JSON.stringify(await this.logger.getAllTxRepeaterRequestsByTenantId());
-        console.log('getAllTxRepeaterRequestsByTenantId'+sOutput);
+        //console.log('getAllTxRepeaterRequestsByTenantId'+sOutput);
         return sOutput;
     }        
     
@@ -173,14 +173,15 @@ class commController {
             }
             aTxAsgn.push(JSON.parse(JSON.stringify(oTxDataOut.transactionAssignments[i])));
         }
-        oTxDataOut.transactionAssignments = aTxAsgn;    
+        delete oTxDataOut.transactionAssignments;
+        oTxDataOut.transactionAssignments = JSON.parse(JSON.stringify(aTxAsgn));    
         oTxDataOut.isRunnable = true;    
         return oTxDataOut;    
     }    
 
     transactionRepeater(oConfig){
         setTimeout(() => {
-            console.log('called');
+            //console.log('called');
             this.commTxRepeater(oConfig);;
         }, 2000);                
     }

@@ -4,7 +4,7 @@
             <pages>      
                 <Page showHeader="true" showFooter="true">
                 	<headerContent>
-			            <Button icon="sap-icon://home" tooltip="Return to Home" press="onReturnToHome"/>
+			            <!-- <Button icon="sap-icon://home" tooltip="Return to Home" press="onReturnToHome"/> -->
 		            </headerContent>
                     <content>
                         <Panel id="idPanelMain" class="zsapUiTinyPadding" backgroundDesign="Solid" >
@@ -55,7 +55,7 @@
                                     <l:Grid defaultSpan="XL3 L3 M6 S12" class="sapUiSmallMarginBeginEnd">
                                         <HBox alignItems="Center" justifyContent="Start">
                                             <Label text="Business Unit" labelFor="SBUM1" class="sapUiSmallMarginBeginEnd"/>
-                                            <Select id="idSBUM1"	forceSelection="false" items="{path: '/BusinessUnits', sorter: { path: 'name' }}" editable="{DetailUI>/PM2M/idSBUY1/editable}" selectedKey="{DetailUI>/PM2M/idSBUM1/selectedKey}">
+                                            <Select id="idSBUM1"	forceSelection="false" items="{path: '/BusinessUnits', sorter: { path: 'name' }}" editable="{DetailUI>/PM2M/idSBUM1/editable}" selectedKey="{DetailUI>/PM2M/idSBUM1/selectedKey}">
 					                            <core:Item key="{processingUnit}" text="{name}" />
 				                            </Select>  
                                         </HBox>  

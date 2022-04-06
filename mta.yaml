@@ -31,7 +31,7 @@ modules:
       - name: spmhub-db
       - name: spmhub-uaa
 
-  - name: spmhub-approuter
+  - name: spmhub-ui
     type: nodejs
     path: approuter
     requires:

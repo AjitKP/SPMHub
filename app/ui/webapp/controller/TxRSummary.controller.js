@@ -4,16 +4,20 @@ sap.ui.define([
     "sap/m/MessageBox",
     "sap/ui/model/json/JSONModel",
     "sap/m/MessageToast",
+    "../model/formatter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator"    
 ],
+
     /**
      * @param {typeof sap.ui.core.mvc.Controller} Controller
      */
-    function (Controller, MessageBox, JSONModel, MessageToast, Filter, FilterOperator) {
+    function (Controller, MessageBox, JSONModel, MessageToast, formatter, Filter, FilterOperator) {
         "use strict";
-        //bSubmitSuccess = false;
+        
         return Controller.extend("hxm.spm.ui.controller.TxRSummary", {
+            formatter: formatter,
+            
             onInit: function () {
                 this.getView().byId("idSummaryCardHeader").setTitle("Logged In Tenant : "+this.getOwnerComponent().getModel().getHeaders()["tenant"]);
                 var oRouter = this.getOwnerComponent().getRouter();

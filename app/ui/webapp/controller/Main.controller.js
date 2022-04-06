@@ -14,29 +14,13 @@ sap.ui.define([
         return Controller.extend("hxm.spm.ui.controller.Main", {
             
             onInit: function () {
-                // var sReqUser='', sReqEmail='';
-                // const oModel = this.getOwnerComponent().getModel();
-                // oModel.setHeaders({ "spmhub_action":"GetUserInfo"});
-                // oModel.read("/GetUserInfo()", {
-                //     async: false,
-                //     groupId:"GetUserInfo",
-                //     // eslint-disable-next-line no-undef
-                //     success: jQuery.proxy(function (oData) {
-                //         sReqEmail   = oData.GetUserInfo.reqemail;
-                //         sReqUser    = oData.GetUserInfo.requser;
-                //         var x = oModel.getHeaders();
-                //         console.log(x);
-                //         this.getView().byId("idTitleUserName").setText(sReqUser);
-                //         oModel.setHeaders({ "requser":sReqUser, "reqemail":sReqEmail});
-                //         var oHtmlModel = new JSONModel({HTML : "<h3>Welcome "+sReqUser+"!!</h3>"});
-                //         this.getView().setModel(oHtmlModel, "user");                         
-                //     }).bind(this),
-                //     // eslint-disable-next-line no-undef
-                //     error: jQuery.proxy(function (oError) {
-                //         console.log('Error in getting logged in email and name')
-                //         console.log(oError);                    
-                //     })
-                // });                             
+                var oRouter = this.getOwnerComponent().getRouter();
+                oRouter.getRoute("RouteMain").attachMatched(this._onRouteMatched, this);                                
+            },
+
+            _onRouteMatched : function (oEvent) {
+                this.getOwnerComponent().getModel("appheader").setData({EnableMenu:false, ChangeTenant:false, NewRequest:false});
+                this.getOwnerComponent().getModel("appheader").refresh();
             },
 
             onChangeTheme: function(oEvent){

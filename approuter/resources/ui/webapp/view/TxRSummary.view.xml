@@ -122,7 +122,7 @@
                                                         <Text text="{TxRLog>reqinput/Currency}" />   
                                                         <Text text="{TxRLog>requser}" />  
                                                         <Text text="{TxRLog>reqstatus}" />   
-                                                        <Text text="{TxRLog>modifiedAt}" />                                                    
+                                                        <Text text="{path: 'TxRLog>modifiedAt', formatter:'.formatter.formatDate'}" />
                                                     </cells>
                                                 </ColumnListItem>
                                             </items>

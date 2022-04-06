@@ -80,6 +80,8 @@ sap.ui.define([
                 if(sLogUUID == "" || sLogUUID == undefined){
                     setTimeout(this.getLog(oView), 5000); 
                 }
+                oView.setBusyIndicatorDelay(500);
+                oView.setBusy(true);
                 oModel.read("/GetLogsByUUID()", {
                     urlParameters:{LogUUID:sLogUUID},
                     // eslint-disable-next-line no-undef
@@ -150,11 +152,13 @@ sap.ui.define([
                         var oJSONModel = new JSONModel(oLog);
                         this.getView().setModel(oJSONModel, "Log");
                         this.getView().getModel("Log").refresh();
-                        if(oLog.LogHead.reqstatus != "Complete"){ setTimeout(this.getLog(this.getView(), false), 5000); }                        
+                        if(oLog.LogHead.reqstatus != "Complete"){ setTimeout(this.getLog(this.getView(), false), 5000); }  
+                        this.getView().setBusy(false);                      
                     }).bind(this),
                     // eslint-disable-next-line no-undef
                     error: jQuery.proxy(function (oError) {
                         console.log(oError);
+                        this.getView().setBusy(false);
                         var msg = "Technical error occurred while getting logs. Please reach out to adiministrator."
                         MessageBox.error(msg, {styleClass: "sapUiSizeCompact"});
                     })

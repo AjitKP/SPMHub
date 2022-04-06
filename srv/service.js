@@ -11,7 +11,6 @@ module.exports = cds.service.impl(async function () {
 
     this.on('READ', BusinessUnits, async(req)=>{
         //console.log(req.query)
-        console.log(req.headers);
         // const CommissionsApi = await cds.connect.to("CommissionsApi");
         // return CommissionsApi.tx(req).run(req.query);
         const sUrl=req.headers["tenant"], sUser=req.headers["user"], sPassword=req.headers["pass"];
@@ -20,42 +19,42 @@ module.exports = cds.service.impl(async function () {
     })
 
     this.on('VerifyCredentials',async(req)=>{
-        console.log("reached VerifyCredentials")
+        //console.log("reached VerifyCredentials")
         const commSrv = this.fnInstantiateCommService(req, 'Credentials');
         return await commSrv.verifyCommCredentials();
     })
 
     this.on('GetUserInfo',async(req)=>{
-        console.log("reached GetUserInfo")
-        console.log(JSON.stringify(req.headers));
+        // console.log("reached GetUserInfo")
+        // console.log(JSON.stringify(req.headers));
         return req.headers["LoggedInUserInfo"];
     })    
 
     this.on('GetAllLogs',async(req)=>{
-        console.log("reached GetAllLogs")
+        //console.log("reached GetAllLogs")
         const commSrv = this.fnInstantiateCommService(req, 'AllLogs');
         return commSrv.getAllLogs();
     })      
     
     this.on('GetAllTxRepeaters',async(req)=>{
-        console.log("reached GetAllTxRepeaters")
+        //console.log("reached GetAllTxRepeaters")
         const commSrv = this.fnInstantiateCommService(req, 'AllTxRepeaters');
         const sOutput = await commSrv.getAllTxRepeaterRequestsByTenantId();
-        console.log('GetAllTxRepeaters'+sOutput);
+        //console.log('GetAllTxRepeaters'+sOutput);
         return sOutput;
     })      
 
     this.on('GetLogsByUUID',async(req)=>{
-        console.log("reached GetLogsByUUID")
+        //console.log("reached GetLogsByUUID")
         const commSrv = this.fnInstantiateCommService(req, 'AllLogs');
         return await commSrv.getLogsByUUID(req.data.LogUUID);
     })        
 
     this.on('TransactionRepeater', async(req)=>{
-        console.log("reached TransactionRepeater")
+        //console.log("reached TransactionRepeater")
         const commSrv = this.fnInstantiateCommService(req, req.data.OpType);
         const sLogId  = await commSrv.createLogHead(req.data);
-        console.log('TransactionRepeater'+sLogId);
+        //console.log('TransactionRepeater'+sLogId);
         commSrv.transactionRepeater(req.data);
         return JSON.stringify({log:sLogId, message: 'Request for Transaction repeater submittted successfully!'});
     })
