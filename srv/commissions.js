@@ -4,7 +4,7 @@ const constants = require('./constants');
 class srvCommissions {    
 
     constructor(sUrl, sUserName, sPassword){
-        this.HostUrl    = 'https://'+sUrl+'.callidusondemand.com/api/v2';
+        this.HostUrl    = 'https://'+sUrl+'.callidusondemand.com/api';
         this.UserName   = sUserName;
         this.Password   = sPassword;        
     }
@@ -21,7 +21,7 @@ class srvCommissions {
 
     async verifyUser(){
         try {
-            const oResponse = await axios({ method:constants.HTTP_METHOD_GET, baseURL: this.HostUrl, url:'/users?$filter=id eq "'+this.UserName+'"', headers:this._getApiHeaders()})
+            const oResponse = await axios({ method:constants.HTTP_METHOD_GET, baseURL: this.HostUrl, url:'/v2/users?$filter=id eq "'+this.UserName+'"', headers:this._getApiHeaders()})
             return oResponse.data.users.length > 0 ? this.UserName : '';
         } catch (error) {
             console.log(error);
@@ -39,7 +39,7 @@ class srvCommissions {
 
      async getBusinessUnits(){
         try {
-            const oResponse = await axios({ method:constants.HTTP_METHOD_GET, baseURL: this.HostUrl, url:'/businessUnits', headers:this._getApiHeaders()})
+            const oResponse = await axios({ method:constants.HTTP_METHOD_GET, baseURL: this.HostUrl, url:'/v2/businessUnits', headers:this._getApiHeaders()})
             return oResponse.data.businessUnits;            
         } catch (error) {
             console.log(error);
@@ -48,7 +48,7 @@ class srvCommissions {
 
      async createBusinessUnits(input){
         try {
-            const oResponse = await axios({ method:constants.HTTP_METHOD_POST, baseURL: this.HostUrl, url:'/businessUnits', headers:this._getApiHeaders(), data:[input]})
+            const oResponse = await axios({ method:constants.HTTP_METHOD_POST, baseURL: this.HostUrl, url:'/v2/businessUnits', headers:this._getApiHeaders(), data:[input]})
             return oResponse.data.businessUnits[0];            
         } catch (error) {
             console.log(error);
@@ -57,7 +57,7 @@ class srvCommissions {
 
     async getCalendars(){
         try {
-            const oResponse = await axios({ method:constants.HTTP_METHOD_GET, baseURL: this.HostUrl, url:'/calendars?expand=majorPeriodType,minorPeriodType', headers:this._getApiHeaders()})
+            const oResponse = await axios({ method:constants.HTTP_METHOD_GET, baseURL: this.HostUrl, url:'/v2/calendars?expand=majorPeriodType,minorPeriodType', headers:this._getApiHeaders()})
             return oResponse.data.calendars.map(x=>{ 
                 return {calendarSeq:x.calendarSeq,calendar:x.name,description:x.description,
                         minorPeriodSeq:x.minorPeriodType.key,minorPeriod:x.minorPeriodType.displayName,
@@ -69,7 +69,7 @@ class srvCommissions {
     }    
     async createCalendars(input){
         try {
-            const oResponse = await axios({ method:constants.HTTP_METHOD_POST, baseURL: this.HostUrl, url:'/calendars', headers:this._getApiHeaders(), data:[input]})
+            const oResponse = await axios({ method:constants.HTTP_METHOD_POST, baseURL: this.HostUrl, url:'/v2/calendars', headers:this._getApiHeaders(), data:[input]})
             return oResponse.data.calendars[0];            
         } catch (error) {
             console.log(error);
@@ -94,7 +94,7 @@ class srvCommissions {
 
     async createTransaction(input){
         try {
-            const oResponse = await axios({ method:constants.HTTP_METHOD_POST, baseURL: this.HostUrl, url:'/salesTransactions', headers:this._getApiHeaders(), data:[input], responseType:"application/json",validateStatus: function(status){return status < 500;}});
+            const oResponse = await axios({ method:constants.HTTP_METHOD_POST, baseURL: this.HostUrl, url:'/v2/salesTransactions', headers:this._getApiHeaders(), data:[input], responseType:"application/json",validateStatus: function(status){return status < 500;}});
             //console.log(JSON.stringify(oResponse.data));
             if(oResponse.data.salesTransactions[0].hasOwnProperty("_ERROR_") == true){
                 throw {status:oResponse.status, message:oResponse.data.salesTransactions[0]["_ERROR_"], data:[input]}

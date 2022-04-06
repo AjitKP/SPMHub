@@ -52,7 +52,7 @@ class srvLogger {
         oEntry.modifiedBy   = this.ReqUser;
         let oLogEntry = await db.create('SpmHubRequestLog') .entries(oEntry);  
         this.sLogUUID = oLogEntry.results[0].values[0];
-        console.log("postLogHead"+this.sLogUUID);
+        //console.log("postLogHead"+this.sLogUUID);
         return this.sLogUUID;
     }    
 
@@ -73,12 +73,12 @@ class srvLogger {
     async getAllTxRepeaterRequestsByTenantId(){
         let oLog = {}, aLogRequests=[];
         const db = await cds.connect.to ('db');
-        console.log(this.TenantId);
+        //console.log(this.TenantId);
         let query = SELECT.from('SpmHubRequestLog').where({tenantid:this.TenantId});
         //let query = cds.parse.cql (`SELECT count(*) as logcount from SpmHubRequestLog where tenantid='${this.TenantId}'`);
-        console.log(JSON.stringify(query));
+        //console.log(JSON.stringify(query));
         aLogRequests = await db.run(query);
-        console.log('QueryOutput:'+JSON.stringify(aLogRequests));
+        //console.log('QueryOutput:'+JSON.stringify(aLogRequests));
         oLog.LogHead = JSON.parse(JSON.stringify(aLogRequests));         
         return oLog;   
     }
@@ -86,10 +86,10 @@ class srvLogger {
     async setLogHeadStatus(sLogUUID, sStatus){
         const db = await cds.connect.to ('db');
         const { SpmHubRequestLog } = cds.entities ('hxm')
-        console.log('setLogHeadStatus:'+sLogUUID+sStatus);
-        console.log(SpmHubRequestLog);
+        //console.log('setLogHeadStatus:'+sLogUUID+sStatus);
+        //console.log(SpmHubRequestLog);
         await db.update(SpmHubRequestLog, sLogUUID).with({reqstatus:sStatus}).where({ID:sLogUUID});
-        console.log('setLogHeadStatus-after:'+sLogUUID);
+        //console.log('setLogHeadStatus-after:'+sLogUUID);
     }    
 
     async getLogsByUUID(sLogUUID){
@@ -108,13 +108,13 @@ class srvLogger {
         const db = await cds.connect.to ('db');
         query = cds.parse.cql (`SELECT count(*) as logcount from SpmHubRequestLogItem where loguuid='${sLogUUID}' and itemtype='${constants.LOG_TYPE_SUCCESS}'`);
         aResult = await db.run(query);
-        console.log('getLogCountByUUID'+JSON.stringify(query))
-        console.log('getLogCountByUUID'+JSON.stringify(aResult))
+        //console.log('getLogCountByUUID'+JSON.stringify(query))
+        //console.log('getLogCountByUUID'+JSON.stringify(aResult))
         iSuccessCount = aResult[0].logcount;
         query = cds.parse.cql (`SELECT count(*) as logcount from SpmHubRequestLogItem where loguuid='${sLogUUID}' and itemtype='${constants.LOG_TYPE_ERROR}'`);
         aResult = await db.run(query);
-        console.log('getLogCountByUUID'+JSON.stringify(query))
-        console.log('getLogCountByUUID'+JSON.stringify(aResult))        
+        //console.log('getLogCountByUUID'+JSON.stringify(query))
+        //console.log('getLogCountByUUID'+JSON.stringify(aResult))        
         iErrorCount = aResult[0].logcount;        
         return {SuccessCount:iSuccessCount, ErrorCount:iErrorCount};
     }    

@@ -64,7 +64,7 @@ class commController {
 
     prepareTxQuery(sDate, sProcessingUnitSeq){
         let sQuery = '';
-        sQuery = sQuery + '/salesTransactions?inlineCount=true&orderBy=compensationDate&top=100&expand=transactionAssignments&$filter='; 
+        sQuery = sQuery + '/v2/salesTransactions?inlineCount=true&orderBy=compensationDate&top=100&expand=transactionAssignments&$filter='; 
         sQuery = sQuery + 'processingUnit eq ' + sProcessingUnitSeq;
         sQuery = sQuery + ' and ' + 'compensationDate eq '+ sDate;        
         return sQuery;
@@ -113,18 +113,23 @@ class commController {
         let sStartDate, sEndDate, dMoment, aDateList=[], sDate, oDateList={};
         if(sOpType == this.sYearToYear){
             sStartDate  = moment(sFromTime, 'YYYY').clone().startOf('year').format(this.sDateFormat);
-            sEndDate    = moment(sFromTime, 'YYYY').clone().endOf('year').format(this.sDateFormat);
+            sEndDate    = moment(sFromTime, 'YYYY').clone().endOf('year').add(1, this.sDays).format(this.sDateFormat);
         }else if (sOpType == this.sMonthToMonth) {
             sStartDate  = moment(sFromTime, 'YYYY-MM').clone().startOf('month').format(this.sDateFormat);
-            sEndDate    = moment(sFromTime, 'YYYY-MM').clone().endOf('month').format(this.sDateFormat);
+            sEndDate    = moment(sFromTime, 'YYYY-MM').clone().endOf('month').add(1, this.sDays).format(this.sDateFormat);
         } else {
-            sStartDate  = moment(sFromTime, this.sDateFormat).clone().startOf('month').format(this.sDateFormat);
-            sEndDate    = moment(sFromTime, this.sDateFormat).clone().endOf('month').format(this.sDateFormat);
+            sStartDate  = moment(sFromTime, this.sDateFormat).clone().startOf('days').format(this.sDateFormat);
+            sEndDate    = moment(sFromTime, this.sDateFormat).clone().endOf('days').format(this.sDateFormat);
         }
         dMoment = moment(sStartDate, this.sDateFormat);
         do {                        
             oDateList.FromDate = dMoment.format(this.sDateFormat);
             oDateList.ToDate = oDateList.FromDate.replace(sFromTime, sToTime);
+            oDateList.Valid = moment(oDateList.ToDate, this.sDateFormat).isValid();
+            if(oDateList.Valid == false){
+                oDateList.ToDate = aDateList[aDateList.length-1].ToDate;
+                oDateList.Valid = moment(oDateList.ToDate, this.sDateFormat).isValid();
+            }            
             aDateList.push(JSON.parse(JSON.stringify(oDateList)));
             sDate = dMoment.add(1, this.sDays).format(this.sDateFormat);
         } while (sDate != sEndDate && sOpType != this.sDateToDate);
@@ -192,18 +197,20 @@ class commController {
         let sLogUUID = this.sLogUUID == ''? await this.logger.postLogHead(): this.sLogUUID;
         await this.logger.setLogHeadStatus(sLogUUID, constants.LOG_STAT_INPROCESS);
         let aDateList = this.getDatesList(oConfig.OpType, oConfig.FromTime, oConfig.ToTime);
+        console.log('aDateList'+JSON.stringify(aDateList));
 
         for(let iCnt=0; iCnt<aDateList.length; iCnt++){
-
+            if(aDateList[iCnt] == false){continue;}
             sFromDate = aDateList[iCnt].FromDate, sToDate = aDateList[iCnt].ToDate;
             sQuery =  this.prepareTxQuery(sFromDate, sProcessingUnitSeq);
-
+            //console.log('sQuery'+sQuery);
             aTxData = await this.commAPI.getTxByQuery(sQuery);
             aTxData.length <= 0 ? await this.logger.postLogItem(sLogUUID, constants.LOG_TYPE_WARNING, 'No transaction found for date: '+sFromDate) : await this.logger.postLogItem(sLogUUID, 'Information', aTxData.length+' transactions found for date: '+sFromDate);
-     
+            //console.log('aTxData.length+sFromDate:'+aTxData.length+'found for date:'+sFromDate);
             for(let i=0; i<aTxData.length; i++){    
                 oTxData = JSON.parse(JSON.stringify(aTxData[i]));
-                if(oTxData.value.unitType.name != oConfig.Currency){continue;}      
+                console.log('Tx-'+sFromDate+'-'+i+':'+oTxData.salesOrder+':'+oTxData.lineNumber.value+oTxData.subLineNumber.value);
+                if(oTxData.value.unitType.name != oConfig.Currency){console.log(oTxData.salesTransactionSeq); continue;}      
                 
                 oTxData = this.putTxDateFields(this.sDateToDate, oTxData, sFromDate, sToDate);
                 oTxData = this.putTxLine(oTxData, sToDate, i);

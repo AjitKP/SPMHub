@@ -15,8 +15,8 @@ function getUserInfo(token) {
 };
 
 ar.beforeRequestHandler.use('/v2/hxm/spmhub/service/$batch', function (req, res, next) {
-    console.log("***Reached***");
-    console.log(JSON.stringify(process.env));
+    // console.log("***Reached***");
+    // console.log(JSON.stringify(process.env));
 	if (!req.user) {
 		// res.statusCode = 403;
 		// res.end(`Missing JWT Token`);
@@ -26,7 +26,7 @@ ar.beforeRequestHandler.use('/v2/hxm/spmhub/service/$batch', function (req, res,
         var reqUser    = decodedJWTToken.given_name + ' ' + decodedJWTToken.family_name;
         var oUserInfo  = {id:req.user.id, name:req.user.name, reqemail:reqEmail, requser:reqUser};
         if(req.headers["spmhub_action"] == "GetUserInfo"){
-            console.log("***spmhub_action=GetUserInfo Reached***");
+            // console.log("***spmhub_action=GetUserInfo Reached***");
             res.statusCode = 202;
             res.setHeader("Content-Type", "multipart/mixed;boundary=batch_743c-3239-79b7");
             var sUserInfo = JSON.stringify({"d":{"GetUserInfo":{id:req.user.id, name:req.user.name, reqemail:reqEmail, requser:reqUser}}});
@@ -37,7 +37,7 @@ ar.beforeRequestHandler.use('/v2/hxm/spmhub/service/$batch', function (req, res,
             res.end(sBody);
         }        
         else{
-            console.log("***routed to cds service handle***");
+            // console.log("***routed to cds service handle***");
             next()                        
         }
 
