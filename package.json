@@ -6,26 +6,29 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@sap/cds": "^5",
-    "@sap/cds-odata-v2-adapter-proxy": "^1.8.5",
-    "@sap/xsenv": "^3.2.1",
-    "@sap/xssec": "^3.2.13",
-    "axios": "^0.24.0",
-    "dotenv": "^16.0.0",
+    "@sap/cds": "^7",
+    "@sap/cds-odata-v2-adapter-proxy": "^1.9.21",
+    "@sap/xsenv": "^4.0.0",
+    "@sap/xssec": "^3.3.3",
+    "axios": "^1.5.0",
+    "dotenv": "^16.3.1",
     "express": "^4",
-    "hdb": "^0.18.3",
-    "moment": "^2.29.1",
-    "nodemailer": "^6.7.3",
+    "hdb": "^0.19.5",
+    "moment": "^2.29.4",
+    "nodemailer": "^6.9.4",
     "passport": "^0",
-    "uuid": "^8.3.2",
-    "ws": "^8.5.0"
+    "uuid": "^9.0.0",
+    "ws": "^8.13.0"
   },
   "devDependencies": {
-    "@sap/ux-ui5-tooling": "^1.4.6",
-    "sqlite3": "^5.0.2"
+    "@sap/ux-ui5-tooling": "^1.10.6",
+    "sqlite3": "^5.1.6"
   },
   "scripts": {
-    "start": "cds run"
+    "start": "cds-serve",
+    "undeploy": "cf undeploy spmhub --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
   },
   "eslintConfig": {
     "extends": "eslint:recommended",

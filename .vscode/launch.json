@@ -5,6 +5,14 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Attach to a Cloud Foundry Instance on Port 9229",
+      "port": 9229,
+      "request": "attach",
+      "type": "node",
+      "localRoot": "${workspaceFolder}",
+      "remoteRoot": "/home/vcap/app"
+  },
+    {
       "command": "cds run --with-mocks --in-memory?",
       "name": "cds run",
       "request": "launch",

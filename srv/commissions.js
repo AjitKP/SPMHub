@@ -81,7 +81,8 @@ class srvCommissions {
         sNextQuery = sQuery; 
         try {
             do {
-                const oResponse = await axios({ method:constants.HTTP_METHOD_GET, baseURL: this.HostUrl, url:sNextQuery, headers:this._getApiHeaders()})            
+                const oResponse = await axios({ method:constants.HTTP_METHOD_GET, baseURL: this.HostUrl, url:sNextQuery, headers:this._getApiHeaders()});
+                // oResponse.data = JSON.parse(oResponse.data);            
                 aTxData = [...aTxData, ...oResponse.data.salesTransactions];
                 oResponse.data.hasOwnProperty('next') ? sNextQuery=oResponse.data.next : sNextQuery='';                                    
             } while (sNextQuery);            
@@ -96,6 +97,7 @@ class srvCommissions {
         try {
             const oResponse = await axios({ method:constants.HTTP_METHOD_POST, baseURL: this.HostUrl, url:'/v2/salesTransactions', headers:this._getApiHeaders(), data:[input], responseType:"application/json",validateStatus: function(status){return status < 500;}});
             //console.log(JSON.stringify(oResponse.data));
+            oResponse.data = JSON.parse(oResponse.data);
             if(oResponse.data.salesTransactions[0].hasOwnProperty("_ERROR_") == true){
                 throw {status:oResponse.status, message:oResponse.data.salesTransactions[0]["_ERROR_"], data:[input]}
             }

@@ -11,7 +11,7 @@
                             </VBox>
                         </FlexBox>                                                 
                         <FlexBox height="80%" alignItems="Start" justifyContent="Center">
-                                <f:Card class="sapUiMediumMargin" width="90%" autoFocus="false">
+                                <f:Card class="sapUiMediumMargin" width="90%">
                                     <f:header>
                                         <card:Header iconBackgroundColor="Accent6" title="Commissions System Information" subtitle="Provide tenant id and admin credentials" iconSrc="sap-icon://it-system" />
                                     </f:header>

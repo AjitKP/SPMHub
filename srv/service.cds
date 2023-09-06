@@ -1,6 +1,6 @@
 using { hxm } from '../db/schema';
 
-@path:'hxm/spmhub/service'
+@path:'/hxm/spmhub/service'
 @(restrict: [{ to: 'SPMHubUser' }])
 service SPMHubService {
 

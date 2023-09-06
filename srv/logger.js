@@ -39,6 +39,7 @@ class srvLogger {
 
     async postLogHead(oInput){
         const db = await cds.connect.to ('db');
+        const { SpmHubRequestLog } = cds.entities ('hxm')
         if(oInput == undefined){oInput='';}
         let oEntry = {};
         oEntry.ID           = "";
@@ -50,14 +51,15 @@ class srvLogger {
         oEntry.reqemail     = this.ReqEmail;
         oEntry.createdBy    = this.ReqUser;
         oEntry.modifiedBy   = this.ReqUser;
-        let oLogEntry = await db.create('SpmHubRequestLog') .entries(oEntry);  
+        let oLogEntry = await db.create(SpmHubRequestLog) .entries(oEntry);  
         this.sLogUUID = oLogEntry.results[0].values[0];
         //console.log("postLogHead"+this.sLogUUID);
         return this.sLogUUID;
     }    
 
     async postLogItem(sLogUUID,sLogType,sLogMsg, sLogData){
-        const db = await cds.connect.to ('db')   
+        const db = await cds.connect.to ('db')  
+        const { SpmHubRequestLogItem } = cds.entities ('hxm') 
         let oEntry = {};     
         oEntry.ID           = "";       
         oEntry.loguuid      = sLogUUID;
@@ -66,15 +68,16 @@ class srvLogger {
         sLogData == undefined? oEntry.itemdata = '' : oEntry.itemdata = sLogData;
         oEntry.createdBy    = this.ReqUser;
         oEntry.modifiedBy   = this.ReqUser;  
-        let oLogItemEntry = await db.create('SpmHubRequestLogItem') .entries(oEntry);  
+        let oLogItemEntry = await db.create(SpmHubRequestLogItem) .entries(oEntry);  
         return oLogItemEntry.results[0];           
     }    
 
     async getAllTxRepeaterRequestsByTenantId(){
         let oLog = {}, aLogRequests=[];
         const db = await cds.connect.to ('db');
+        const { SpmHubRequestLog } = cds.entities ('hxm')
         //console.log(this.TenantId);
-        let query = SELECT.from('SpmHubRequestLog').where({tenantid:this.TenantId});
+        let query = SELECT.from(SpmHubRequestLog).where({tenantid:this.TenantId});
         //let query = cds.parse.cql (`SELECT count(*) as logcount from SpmHubRequestLog where tenantid='${this.TenantId}'`);
         //console.log(JSON.stringify(query));
         aLogRequests = await db.run(query);
@@ -95,10 +98,11 @@ class srvLogger {
     async getLogsByUUID(sLogUUID){
         let oLog = {}, query;
         const db = await cds.connect.to ('db');
-        query = SELECT.from('SpmHubRequestLog').where({ID:sLogUUID});
+        const { SpmHubRequestLog, SpmHubRequestLogItem } = cds.entities ('hxm')
+        query = SELECT.from(SpmHubRequestLog).where({ID:sLogUUID});
         oLog.LogHead = await db.run(query);
         oLog.LogHead = oLog.LogHead[0];
-        query = SELECT.from('SpmHubRequestLogItem').where({loguuid:sLogUUID});
+        query = SELECT.from(SpmHubRequestLogItem).where({loguuid:sLogUUID});
         oLog.LogItems = await db.run(query);       
         return oLog;          
     }    
@@ -106,12 +110,12 @@ class srvLogger {
     async getLogCountByUUID(sLogUUID){
         let query, aResult, iSuccessCount=0, iErrorCount=0;
         const db = await cds.connect.to ('db');
-        query = cds.parse.cql (`SELECT count(*) as logcount from SpmHubRequestLogItem where loguuid='${sLogUUID}' and itemtype='${constants.LOG_TYPE_SUCCESS}'`);
+        query = cds.parse.cql (`SELECT count(*) as logcount from HXM_SpmHubRequestLogItem where loguuid='${sLogUUID}' and itemtype='${constants.LOG_TYPE_SUCCESS}'`);
         aResult = await db.run(query);
         //console.log('getLogCountByUUID'+JSON.stringify(query))
         //console.log('getLogCountByUUID'+JSON.stringify(aResult))
         iSuccessCount = aResult[0].logcount;
-        query = cds.parse.cql (`SELECT count(*) as logcount from SpmHubRequestLogItem where loguuid='${sLogUUID}' and itemtype='${constants.LOG_TYPE_ERROR}'`);
+        query = cds.parse.cql (`SELECT count(*) as logcount from HXM_SpmHubRequestLogItem where loguuid='${sLogUUID}' and itemtype='${constants.LOG_TYPE_ERROR}'`);
         aResult = await db.run(query);
         //console.log('getLogCountByUUID'+JSON.stringify(query))
         //console.log('getLogCountByUUID'+JSON.stringify(aResult))        
